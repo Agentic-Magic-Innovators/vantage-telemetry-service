@@ -175,6 +175,7 @@ async def root():
     return {
         "service": "vantage-telemetry-service",
         "telemetry": "/v1/telemetry",
+        "webhooks": "/v1/webhooks/github",
         "metrics": "/metrics",
         "dashboard": "/dashboard",
     }
@@ -201,6 +202,51 @@ async def internal_events(request: Request, _=Depends(_check_internal_key)):
         return await _ingest_event(event)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@app.post("/v1/webhooks/github", tags=["Webhooks"])
+async def github_webhook(request: Request):
+    """Ingest GitHub pull_request and pull_request_review webhooks as PR lifecycle telemetry."""
+    from .github_webhook import events_from_github_webhook, verify_github_signature
+
+    body = await request.body()
+    secret = os.environ.get("GITHUB_WEBHOOK_SECRET", "").strip()
+    allow_unsigned = os.environ.get("VANTAGE_ALLOW_UNSIGNED_WEBHOOKS", "").lower() in ("1", "true", "yes")
+    signature = request.headers.get("X-Hub-Signature-256")
+
+    if secret:
+        if not verify_github_signature(body, signature, secret):
+            raise HTTPException(status_code=401, detail="Invalid GitHub webhook signature")
+    elif not allow_unsigned:
+        raise HTTPException(status_code=503, detail="GITHUB_WEBHOOK_SECRET is not configured")
+
+    github_event = request.headers.get("X-GitHub-Event", "")
+    try:
+        payload = json.loads(body.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=400, detail="Invalid JSON payload") from exc
+
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=400, detail="Webhook payload must be a JSON object")
+
+    events = events_from_github_webhook(github_event, payload)
+    if not events:
+        return {"status": "ignored", "githubEvent": github_event, "ingested": 0}
+
+    results = []
+    for event in events:
+        try:
+            _validate_telemetry_event(event)
+            results.append(await _ingest_event(event))
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail=f"Invalid telemetry from webhook: {exc}") from exc
+
+    return {
+        "status": "ok",
+        "githubEvent": github_event,
+        "ingested": len(results),
+        "results": results,
+    }
 
 
 @app.get("/metrics")

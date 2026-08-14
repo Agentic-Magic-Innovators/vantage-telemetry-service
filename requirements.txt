@@ -5,3 +5,4 @@ asyncpg
 google-auth
 requests
 pytest
+pytest-asyncio

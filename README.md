@@ -49,6 +49,44 @@ Save and wait ~1 minute, then hard-refresh the dashboard.
 | Method | Path | Purpose |
 |--------|------|---------|
 | POST | `/v1/telemetry` | MCP / client telemetry ingest |
+| POST | `/v1/webhooks/github` | GitHub PR lifecycle webhooks → Delivery & PRs |
 | POST | `/v1/internal/events` | Harness-core inference metrics |
 | GET | `/metrics` | Dashboard summary (auth required) |
 | GET | `/dashboard` | Standalone telemetry UI |
+
+## GitHub webhook (Delivery & PRs)
+
+Automatically populate the **Delivery & PRs** dashboard with real PR metrics (reviews, files changed, cycle time) by pointing a GitHub repository webhook at telemetry-service.
+
+### 1. Configure the service
+
+```powershell
+# In .env or docker-compose environment
+GITHUB_WEBHOOK_SECRET=<random-secret-from-secrets.token_hex(32)>
+GITHUB_DEFAULT_TEAM_ID=engineering   # optional — stamped on webhook events
+```
+
+### 2. Add webhook in GitHub
+
+Repository → **Settings** → **Webhooks** → **Add webhook**
+
+| Field | Value |
+|-------|--------|
+| Payload URL | `https://your-telemetry-host/v1/webhooks/github` |
+| Content type | `application/json` |
+| Secret | Same value as `GITHUB_WEBHOOK_SECRET` |
+| Events | **Pull requests** and **Pull request reviews** |
+
+For local dev, expose port 50224 with [ngrok](https://ngrok.com/) or similar, or set `VANTAGE_ALLOW_UNSIGNED_WEBHOOKS=true` for unsigned test POSTs only.
+
+### 3. What gets logged
+
+| GitHub event | Telemetry type | Dashboard fields |
+|--------------|----------------|------------------|
+| PR opened | `pr_opened` | Files, lines added/deleted, openedAt |
+| PR synchronize | `pr_updated` | Updated file counts |
+| Review submitted | `pr_reviewed` | Reviews count, reviewState |
+| PR merged | `pr_merged` | commitHash, mergedAt → cycle time |
+| PR closed (not merged) | `pr_closed` | Status |
+
+Future PRs will appear automatically — no MCP manual logging required.
