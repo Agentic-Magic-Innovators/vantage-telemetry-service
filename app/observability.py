@@ -169,6 +169,41 @@ def _accumulate_user_team_spend(event: dict, team_map: dict, user_map: dict) -> 
     user["savingsUsd"] += savings
 
 
+def _session_active_seconds(event: dict) -> float:
+    """Active coding duration for a productivity session event."""
+    for key in ("activeCodingTimeSec", "durationSec", "activeSeconds"):
+        try:
+            value = float(event.get(key) or 0)
+        except (TypeError, ValueError):
+            value = 0.0
+        if value > 0:
+            return value
+    return 0.0
+
+
+def _session_outcome_key(event: dict) -> tuple:
+    return (
+        event.get("userId") or "unknown",
+        event.get("teamId") or "unknown",
+        int(event.get("linesAdded") or 0),
+        int(event.get("linesDeleted") or 0),
+        round(_session_active_seconds(event), 1),
+    )
+
+
+def _enrich_productivity_sessions(sessions: list[dict], outcomes: list[dict]) -> list[dict]:
+    """Attach committed/abandoned outcome to filesystem productivity sessions."""
+    outcome_by_key = {_session_outcome_key(o): o.get("outcome") for o in outcomes}
+    enriched: list[dict] = []
+    for session in sessions:
+        row = dict(session)
+        outcome = outcome_by_key.get(_session_outcome_key(session))
+        if outcome:
+            row["outcome"] = outcome
+        enriched.append(row)
+    return enriched
+
+
 # ---------------------------------------------------------------------------
 # Write path
 # ---------------------------------------------------------------------------
@@ -352,7 +387,8 @@ def _compute_summary(items: list) -> dict:
         x for x in items
         if "route" in x and x.get("type", "inference") not in client_types
     ]
-    prod_items = [x for x in items if x.get("type") in ("productivity", "productivity_task")]
+    prod_session_items = [x for x in items if x.get("type") == "productivity"]
+    prod_task_items = [x for x in items if x.get("type") == "productivity_task"]
     audit_items = [x for x in items if x.get("type") == "audit"]
     usage_items = [x for x in items if x.get("type") == "usage"]
     cost_items = [x for x in items if x.get("type") == "cost"]
@@ -420,11 +456,12 @@ def _compute_summary(items: list) -> dict:
     client_cost_savings = sum(x.get("savingsUsd", 0) for x in cost_items)
     client_telemetry = {
         "auditCount": len(audit_items),
-        "productivitySessionCount": len(prod_items),
+        "productivitySessionCount": len(prod_session_items),
+        "productivityTaskCount": len(prod_task_items),
         "usageEventCount": len(usage_items),
         "costEventCount": len(cost_items),
-        "totalLinesAdded": sum(x.get("linesAdded", 0) for x in prod_items),
-        "totalLinesDeleted": sum(x.get("linesDeleted", 0) for x in prod_items),
+        "totalLinesAdded": sum(x.get("linesAdded", 0) for x in prod_session_items),
+        "totalLinesDeleted": sum(x.get("linesDeleted", 0) for x in prod_session_items),
         "totalClientTokens": sum(x.get("totalTokens", 0) for x in usage_items),
         "clientActualCostUsd": round(client_cost_actual, 6),
         "clientSavingsUsd": round(client_cost_savings, 6),
@@ -441,11 +478,12 @@ def _compute_summary(items: list) -> dict:
         est = _event_tokens(x)
         if est > 0:
             completion_tokens += est
-    active_time_sec = sum(float(x.get("activeCodingTimeSec") or x.get("durationSec") or 0) for x in prod_items)
+    active_time_sec = sum(_session_active_seconds(x) for x in prod_session_items)
     ai_wait_ms = sum(_event_duration_ms(x) for x in usage_items + inference_items + cursor_usage_items + agent_turn_items)
-    rework_lines = sum(int(x.get("reworkLines") or 0) for x in prod_items)
-    lines_added = sum(int(x.get("linesAdded") or 0) for x in prod_items)
-    context_switches = sum(int(x.get("contextSwitchCount") or 0) for x in prod_items)
+    rework_lines = sum(int(x.get("reworkLines") or 0) for x in prod_session_items)
+    lines_added = sum(int(x.get("linesAdded") or 0) for x in prod_session_items)
+    context_switches = sum(int(x.get("contextSwitchCount") or 0) for x in prod_session_items)
+    productivity_sessions = _enrich_productivity_sessions(prod_session_items, session_outcome_items)
 
     by_tool_map: dict = defaultdict(lambda: {"events": 0, "users": set(), "tokens": 0, "durationMs": 0.0, "costUsd": 0.0})
     for x in usage_items + inference_items + cursor_usage_items + agent_turn_items:
@@ -523,9 +561,11 @@ def _compute_summary(items: list) -> dict:
         "tokens": {"total": total_tokens, "prompt": prompt_tokens, "completion": completion_tokens},
         "time": {"activeCodingSec": round(active_time_sec, 1), "aiWaitMs": round(ai_wait_ms, 1)},
         "flow": {
-            "sessions": len(prod_items), "reworkLines": rework_lines,
+            "sessions": len(prod_session_items), "reworkLines": rework_lines,
             "reworkRatePercent": round(100 * rework_lines / lines_added, 1) if lines_added else 0.0,
             "contextSwitches": context_switches,
+            "committedSessions": sum(1 for x in session_outcome_items if x.get("outcome") == "committed"),
+            "abandonedSessions": sum(1 for x in session_outcome_items if x.get("outcome") == "abandoned"),
         },
         "security": {"policyBlocks": blocked, "sensitiveEvents": len(sensitive_events), "redactions": len(redacted)},
         "dataQuality": {
@@ -603,7 +643,8 @@ def _compute_summary(items: list) -> dict:
             }
             for c, v in by_client
         ],
-        "productivity": prod_items[-50:],
+        "productivity": productivity_sessions[-50:],
+        "productivityTasks": prod_task_items[-20:],
         "audit": audit_items[-50:],
         "usage": usage_items[-20:],
         "cost": cost_items[-20:],

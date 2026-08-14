@@ -1015,21 +1015,25 @@ function renderProductivityTable() {
         tbody.innerHTML = reversed.map((x) => {
             const files = Array.isArray(x.filesModifiedList) ? x.filesModifiedList : [];
             const filePreview = files.length ? files.slice(0, 3).join(', ') + (files.length > 3 ? ` (+${files.length - 3} more)` : '') : '—';
+            const activeSec = x.activeCodingTimeSec ?? x.durationSec ?? x.activeSeconds;
+            const outcome = x.outcome || '—';
+            const outcomeClass = outcome === 'committed' ? 'status-merged' : outcome === 'abandoned' ? 'status-closed' : '';
             return `
                 <tr>
-                    <td>${formatTimestamp(x.timestamp)}</td>
+                    <td>${formatTimestamp(x.occurredAt || x.timestamp)}</td>
                     <td class="mono-cell">${escapeHtml(x.userId || '')}</td>
                     <td>${escapeHtml(x.teamId || '')}</td>
-                    <td>${x.activeCodingTimeSec != null ? `${x.activeCodingTimeSec}s` : '—'}</td>
+                    <td>${activeSec != null ? formatDuration(Number(activeSec) * 1000) : '—'}</td>
                     <td style="color: var(--route-local); font-weight: 600;">+${x.linesAdded || 0}</td>
                     <td style="color: var(--warning); font-weight: 600;">−${x.linesDeleted || 0}</td>
                     <td>${x.filesModifiedCount || files.length || 0}</td>
+                    <td>${outcome === '—' ? '—' : `<span class="status-pill ${outcomeClass}">${escapeHtml(outcome)}</span>`}</td>
                     <td class="details-cell">${escapeHtml(truncateText(filePreview, 120))}</td>
                 </tr>
             `;
         }).join('');
     } else {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 2rem;">No productivity sessions yet — file edits in the watched workspace will appear here.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 2rem;">No productivity sessions yet — file edits in the watched workspace will appear here.</td></tr>';
     }
 }
 

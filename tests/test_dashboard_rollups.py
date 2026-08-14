@@ -52,7 +52,63 @@ def test_top_spenders_include_mcp_cost_and_usage_events():
     assert by_team["platform"]["cloudRequests"] == 1
 
 
-def test_top_spenders_sorted_by_actual_cost():
+def test_productivity_sessions_exclude_task_events_and_merge_outcome():
+    items = [
+        {
+            "type": "productivity",
+            "userId": "alice@example.com",
+            "teamId": "LTE",
+            "activeCodingTimeSec": 120.0,
+            "linesAdded": 40,
+            "linesDeleted": 5,
+            "filesModifiedCount": 2,
+            "filesModifiedList": ["a.py", "b.py"],
+        },
+        {
+            "type": "session_outcome",
+            "userId": "alice@example.com",
+            "teamId": "LTE",
+            "activeCodingTimeSec": 120.0,
+            "linesAdded": 40,
+            "linesDeleted": 5,
+            "outcome": "committed",
+        },
+        {
+            "type": "productivity_task",
+            "userId": "alice@example.com",
+            "teamId": "LTE",
+            "taskId": "TASK-1",
+            "linesAdded": 999,
+            "linesDeleted": 0,
+        },
+    ]
+
+    summary = _compute_summary(items)
+
+    assert summary["clientTelemetry"]["productivitySessionCount"] == 1
+    assert summary["clientTelemetry"]["productivityTaskCount"] == 1
+    assert summary["insights"]["flow"]["sessions"] == 1
+    assert summary["insights"]["flow"]["committedSessions"] == 1
+    assert summary["insights"]["time"]["activeCodingSec"] == 120.0
+    assert summary["productivity"][0]["outcome"] == "committed"
+    assert all(row.get("type") != "productivity_task" for row in summary["productivity"])
+
+
+def test_productivity_sessions_support_legacy_active_seconds_field():
+    items = [
+        {
+            "type": "productivity",
+            "userId": "bob@example.com",
+            "teamId": "LTE",
+            "activeSeconds": 90,
+            "linesAdded": 10,
+            "linesDeleted": 0,
+        }
+    ]
+
+    summary = _compute_summary(items)
+    assert summary["insights"]["time"]["activeCodingSec"] == 90.0
+
     items = [
         {"type": "cost", "userId": "low", "teamId": "a", "actualCostUsd": 0.5},
         {"type": "cost", "userId": "high", "teamId": "b", "actualCostUsd": 9.0},
