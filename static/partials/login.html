@@ -1,0 +1,69 @@
+<!-- Login overlay — covers entire viewport until session is active -->
+<div id="login-overlay" class="login-overlay">
+    <div class="login-glow login-glow-1"></div>
+    <div class="login-glow login-glow-2"></div>
+
+    <div class="login-card">
+        <!-- Brand -->
+        <div class="login-brand">
+            <span class="brand-name login-brand-name">Vant<span class="highlight-ai">age</span> Telemetry</span>
+            <p class="login-tagline">Engineering AI Intelligence Dashboard</p>
+        </div>
+
+        <!-- Tab switcher -->
+        <div class="login-tabs">
+            <button class="login-tab active" data-auth-tab="admin">🔐 Admin</button>
+            <button class="login-tab" data-auth-tab="user">👤 User</button>
+        </div>
+
+        <!-- Admin pane -->
+        <div id="auth-panel-admin" class="auth-panel">
+            <p class="auth-description">Full access: dashboard, policies, configuration, and all team metrics.</p>
+            <form id="admin-login-form" autocomplete="off">
+                <div class="login-form-group">
+                    <label for="admin-username">Username</label>
+                    <input type="text" id="admin-username" placeholder="admin" autocomplete="username" required>
+                </div>
+                <div class="login-form-group">
+                    <label for="admin-password">Password</label>
+                    <input type="password" id="admin-password" placeholder="••••••••" autocomplete="current-password" required>
+                </div>
+                <div id="admin-login-error" class="login-error hidden"></div>
+                <button type="submit" class="login-submit-btn">Sign in as Admin</button>
+            </form>
+            <p class="login-hint">First run? Set <code>VANTAGE_ADMIN_PASSWORD</code> to bootstrap your account.</p>
+        </div>
+
+        <!-- User (Google / email) pane -->
+        <div id="auth-panel-user" class="auth-panel hidden">
+            <p class="auth-description">Personal view: your activity, usage metrics, and AI sessions only.</p>
+
+            <!-- Google Sign-In (shown when googleClientId is configured) -->
+            <div id="google-auth-section" class="google-btn-wrapper hidden">
+                <div id="google-signin-btn"></div>
+            </div>
+
+            <!-- Email fallback (shown when Google is not configured, or when email login is enabled) -->
+            <div id="email-auth-section" class="hidden">
+                <p id="email-auth-divider" class="login-hint hidden">or sign in with your allowed email</p>
+                <form id="user-email-form" autocomplete="off">
+                    <div class="login-form-group">
+                        <label for="user-email">Email address</label>
+                        <input type="email" id="user-email" placeholder="you@example.com" autocomplete="email" required>
+                    </div>
+                    <button type="submit" class="login-submit-btn">Sign in as User</button>
+                </form>
+                <p class="login-hint">Add your Google Client ID to <code>config/telemetry.config.json</code> to enable Google Sign-In.</p>
+                <p class="login-hint">Google blocked with <code>origin_mismatch</code>? Add this page's origin (e.g. <code>http://localhost:50224</code>) under <strong>Authorized JavaScript origins</strong> in Google Cloud Console.</p>
+            </div>
+
+            <div id="google-login-error" class="login-error hidden"></div>
+            <div class="user-view-preview">
+                <div class="preview-item preview-allowed">✅ Your activity stream</div>
+                <div class="preview-item preview-allowed">✅ Personal usage &amp; cost</div>
+                <div class="preview-item preview-restricted">🔒 Team-wide analytics (Admin only)</div>
+                <div class="preview-item preview-restricted">🔒 Policies &amp; configuration (Admin only)</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+{
+  "gateway": {
+    "host": "127.0.0.1",
+    "port": 50224
+  },
+  "ui": {
+    "googleClientId": "183950114761-9bn53un7pvjthecb5farh6gutjfd9pa4.apps.googleusercontent.com",
+    "allowedEmails": ["iotchatgpt@gmail.com"],
+    "sessionTtlHours": 8
+  }
+}

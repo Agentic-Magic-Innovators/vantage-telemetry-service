@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vantage Telemetry</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=8">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="/static/js/runtime-config.js?v=8"></script>
+    <script src="/static/js/config.js?v=8"></script>
+</head>
+<body>
+    <div id="partial-login"></div>
+    <div class="background-effects"></div>
+    <nav class="navbar">
+        <div class="nav-brand" style="flex-direction: column; align-items: flex-start; gap: 2px;">
+            <span class="brand-name">Vant<span class="highlight-ai">age</span> Telemetry</span>
+            <span class="badge dev-badge">Standalone</span>
+        </div>
+        <div id="nav-user-info" class="nav-user-info hidden">
+            <span id="nav-user-role" class="nav-user-role"></span>
+            <span id="nav-user-id" class="nav-user-id"></span>
+            <button class="nav-logout-btn" onclick="logout()">Sign out</button>
+        </div>
+    </nav>
+    <main class="content-container">
+        <header class="hero">
+            <h1>Engineering AI intelligence</h1>
+            <p>Delivery outcomes, AI adoption, engineering flow, cost and governance.</p>
+        </header>
+        <section id="dashboard" class="tab-content active"></section>
+    </main>
+    <script src="/static/js/partials.js?v=8"></script>
+    <script src="/static/js/app.js?v=8"></script>
+</body>
+</html>

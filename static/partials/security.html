@@ -1,0 +1,40 @@
+<!-- My API Token — user scope only, hidden for admin -->
+<div id="my-token-section" class="table-card full-width hidden">
+    <div class="my-token-header">
+        <div>
+            <h2>My API Token</h2>
+            <p class="section-subtitle">Use this token in Continue, Cline, or Cursor to authenticate with the harness.</p>
+        </div>
+        <button id="btn-generate-token" class="action-btn">+ Generate New Token</button>
+    </div>
+
+    <!-- Reveal box — shown immediately after generation -->
+    <div id="token-reveal-box" class="token-reveal-box hidden">
+        <div class="token-reveal-warning">
+            🔑 &nbsp;New token generated — <strong>copy it now, it will not be shown again</strong>
+        </div>
+        <div class="token-reveal-row">
+            <input type="text" id="token-reveal-value" class="token-reveal-input" readonly>
+            <button class="btn-copy-token" id="btn-copy-token">Copy</button>
+            <button class="btn-dismiss-token" id="btn-dismiss-token">Done</button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table id="my-tokens-table">
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Scopes</th>
+                    <th>Note</th>
+                    <th>Created</th>
+                    <th>Last Used</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="6" class="loading">Loading tokens…</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>

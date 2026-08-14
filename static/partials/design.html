@@ -1,0 +1,345 @@
+<div class="design-hub-layout">
+    <!-- Sub-navigation Tabs -->
+    <div class="sub-nav-tabs">
+        <button class="sub-tab-btn active" data-subtarget="playground-view">🧪 Playground</button>
+        <button class="sub-tab-btn" data-subtarget="policies-view">🛡️ Policies &amp; Rules</button>
+        <button class="sub-tab-btn" data-subtarget="simulator-view">⚖️ ROI Simulator</button>
+    </div>
+
+    <!-- SUB-TAB 1: Playground View -->
+    <div id="playground-view" class="sub-tab-content active">
+        <div class="playground-grid">
+            <!-- Left Panel: Form & Settings -->
+            <div class="playground-input-panel">
+                <h3>Prompt Details</h3>
+                <div class="form-group">
+                    <label for="playground-system-prompt">System Prompt (Instructions)</label>
+                    <textarea id="playground-system-prompt" placeholder="Optional system instructions for the LLM..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="playground-user-prompt">User Prompt</label>
+                    <textarea id="playground-user-prompt" placeholder="Type your coding question or prompt here..." required></textarea>
+                </div>
+
+                <div class="playground-settings-card">
+                    <h4>Request Context &amp; Routing Parameters</h4>
+                    <div class="settings-grid">
+                        <div class="form-group">
+                            <label for="playground-user-id">User ID</label>
+                            <input type="text" id="playground-user-id" value="developer-session">
+                        </div>
+                        <div class="form-group">
+                            <label for="playground-team-id">Team ID</label>
+                            <input type="text" id="playground-team-id" value="engineering-poc">
+                        </div>
+                        <div class="form-group">
+                            <label for="playground-model">Requested Model (Optional)</label>
+                            <select id="playground-model">
+                                <option value="">Default (Auto-Routed)</option>
+                                <option value="qwen2.5-coder:7b">Local Fast (qwen2.5-coder:7b)</option>
+                                <option value="qwen3.5:9b">Local Main (qwen3.5:9b)</option>
+                                <option value="qwen2.5-coder:7b">Local Mid (qwen2.5-coder:7b)</option>
+                            </select>
+                        </div>
+                        <div class="form-group row-align" style="align-self: end; padding-bottom: 0.5rem;">
+                            <label class="switch-label">
+                                <input type="checkbox" id="playground-stream" checked>
+                                <span>Stream Response</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons-row">
+                    <button type="button" id="btn-simulate-route" class="secondary-action-btn">🔍 Analyze &amp; Simulate Route</button>
+                    <button type="button" id="btn-run-prompt" class="action-btn">🚀 Run Prompt</button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Routing Diagram & Terminal Output -->
+            <div class="playground-output-panel">
+                <!-- Trace Timeline / Pipeline Diagram -->
+                <div class="pipeline-section">
+                    <h3>Pipeline Routing Decision Trace</h3>
+                    <div class="pipeline-flow" id="pipeline-flow">
+                        <div class="pipeline-step pending" id="step-sensitive">
+                            <div class="step-icon">🔒</div>
+                            <div class="step-details">
+                                <div class="step-title">Sensitive Credentials Guardrail</div>
+                                <div class="step-desc">Scanning for passwords, API keys, tokens...</div>
+                            </div>
+                        </div>
+                        <div class="pipeline-step pending" id="step-complexity">
+                            <div class="step-icon">📊</div>
+                            <div class="step-details">
+                                <div class="step-title">Complexity &amp; Length Check</div>
+                                <div class="step-desc">Evaluating token length and keyword signals...</div>
+                            </div>
+                        </div>
+                        <div class="pipeline-step pending" id="step-freshness">
+                            <div class="step-icon">🌐</div>
+                            <div class="step-details">
+                                <div class="step-title">Freshness &amp; Grounding Scan</div>
+                                <div class="step-desc">Checking for real-time keywords (routes to SearXNG websearch or Gemini search grounding)...</div>
+                            </div>
+                        </div>
+                        <div class="pipeline-step pending" id="step-decision">
+                            <div class="step-icon">🎯</div>
+                            <div class="step-details">
+                                <div class="step-title">Routing Decision</div>
+                                <div class="step-desc">Selecting target inference engine...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LLM Response Panel -->
+                <div class="terminal-section">
+                    <div class="terminal-header">
+                        <span class="terminal-title">Inference Terminal</span>
+                        <div class="terminal-actions">
+                            <span class="metric-badge" id="badge-route-taken">—</span>
+                            <span class="metric-badge" id="badge-latency">— ms</span>
+                            <span class="metric-badge" id="badge-tokens">— tokens</span>
+                        </div>
+                    </div>
+                    <div class="terminal-body" id="playground-terminal-output">
+                        <div class="terminal-placeholder">Simulation trace or LLM output will appear here...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUB-TAB 2: Policies & Rules View -->
+    <div id="policies-view" class="sub-tab-content">
+        <div class="policies-editor-container">
+            <div class="policies-editor-header">
+                <h3>Active Gateway Policies</h3>
+                <p>Configure credentials, complexity criteria, freshness routing, and failover fallbacks. Changes are reloaded instantly.</p>
+            </div>
+
+            <div class="policies-editor-sections">
+                <!-- Column 1: Guardrails & Security -->
+                <div class="policy-group-card">
+                    <div class="card-header-icon">🛡️</div>
+                    <h4>Data Leak Prevention &amp; Guardrails</h4>
+                    <p class="section-desc">Requests matching these patterns skip cloud APIs entirely and route to local fast models to prevent credentials leaks.</p>
+                    <div class="form-group">
+                        <label class="switch-container">
+                            <input type="checkbox" id="policy-cloud-enabled">
+                            <span class="switch-slider"></span>
+                            <span class="switch-text">Allow Cloud Escalation</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Sensitive Credential Patterns (Regex list)</label>
+                        <div class="chips-editor-container" id="sensitive-patterns-editor">
+                            <!-- Javascript will populate chips -->
+                        </div>
+                        <div class="chip-input-row">
+                            <input type="text" id="input-new-sensitive" placeholder="Add regex pattern (e.g. secret_token)...">
+                            <button type="button" class="btn-add-chip" id="btn-add-sensitive">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 2: Intent Classification -->
+                <div class="policy-group-card">
+                    <div class="card-header-icon">⚡</div>
+                    <h4>Complexity &amp; Freshness Routing</h4>
+                    <p class="section-desc">Thresholds and keywords used to classify request intent and allocate computing resources.</p>
+
+                    <div class="form-group numeric-setting">
+                        <label for="policy-min-complex-len">Min Length for Complex Classification (chars)</label>
+                        <input type="number" id="policy-min-complex-len" value="2000">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Complexity Keywords</label>
+                        <div class="chips-editor-container" id="complex-keywords-editor"></div>
+                        <div class="chip-input-row">
+                            <input type="text" id="input-new-complex" placeholder="Add keyword (e.g. refactor)...">
+                            <button type="button" class="btn-add-chip" id="btn-add-complex">+</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Freshness Routing Keywords (Web Search Grounding)</label>
+                        <div class="chips-editor-container" id="freshness-terms-editor"></div>
+                        <div class="chip-input-row">
+                            <input type="text" id="input-new-freshness" placeholder="Add freshness word (e.g. latest)...">
+                            <button type="button" class="btn-add-chip" id="btn-add-freshness">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 3: Resilience & Caching -->
+                <div class="policy-group-card">
+                    <div class="card-header-icon">🧪</div>
+                    <h4>Resilience &amp; Caching Policies</h4>
+                    <p class="section-desc">Configures mid-stream recovery, unhelpful local response filtering, and cache settings.</p>
+
+                    <div class="form-group">
+                        <label class="switch-container">
+                            <input type="checkbox" id="policy-fallback-enabled">
+                            <span class="switch-slider"></span>
+                            <span class="switch-text">Fallback Escalation Enabled</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="switch-container">
+                            <input type="checkbox" id="policy-fallback-unhelpful">
+                            <span class="switch-slider"></span>
+                            <span class="switch-text">Trigger Fallback on Unhelpful Responses</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="switch-container">
+                            <input type="checkbox" id="policy-cache-enabled">
+                            <span class="switch-slider"></span>
+                            <span class="switch-text">Enable Response Cache (LRU/Redis)</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group numeric-setting">
+                        <label for="policy-max-unhelpful-len">Max Length for Unhelpful Response (chars)</label>
+                        <input type="number" id="policy-max-unhelpful-len" value="500">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Unhelpful Response Patterns</label>
+                        <div class="chips-editor-container" id="unhelpful-patterns-editor"></div>
+                        <div class="chip-input-row">
+                            <input type="text" id="input-new-unhelpful" placeholder="Add pattern (e.g. unable to)...">
+                            <button type="button" class="btn-add-chip" id="btn-add-unhelpful">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deploy Button -->
+            <div class="policies-deploy-footer">
+                <span id="save-status-msg" class="status-msg"></span>
+                <button type="button" id="btn-save-policies" class="action-btn">💾 Save &amp; Deploy Policies</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUB-TAB 3: ROI Simulator View -->
+    <div id="simulator-view" class="sub-tab-content">
+        <div class="simulator-layout">
+            <!-- Left Panel: Calculator Inputs -->
+            <div class="calculator-panel">
+                <h3>FinOps ROI Calculator</h3>
+                <p>Estimate the savings generated by using local computing models (Ollama stack) before escalating workloads to cloud APIs.</p>
+
+                <div class="form-group">
+                    <label for="calc-requests">Estimated Monthly Requests</label>
+                    <input type="number" id="calc-requests" value="50000" min="1000">
+                </div>
+
+                <div class="form-group">
+                    <label for="calc-avg-tokens">Average Tokens per Request</label>
+                    <input type="number" id="calc-avg-tokens" value="1500" min="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="calc-cloud-cost">Baseline Cloud Cost (per 1K Tokens)</label>
+                    <input type="number" id="calc-cloud-cost" value="0.010" step="0.001" min="0.001">
+                </div>
+
+                <div class="form-group">
+                    <label for="calc-local-ratio">Percentage Handled Locally (%)</label>
+                    <div class="slider-group">
+                        <input type="range" id="calc-local-ratio" value="80" min="0" max="100">
+                        <span id="calc-local-ratio-val">80%</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="calc-cache-hit-rate">Response Cache Hit Rate (%)</label>
+                    <div class="slider-group">
+                        <input type="range" id="calc-cache-hit-rate" value="30" min="0" max="100">
+                        <span id="calc-cache-hit-rate-val">30%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Calculator Outputs & Visuals -->
+            <div class="calculator-results">
+                <div class="roi-cards-grid">
+                    <div class="roi-card card-cloud">
+                        <span class="roi-card-label">Baseline Cost (100% Cloud)</span>
+                        <span class="roi-card-value" id="val-baseline-cost">$0.00</span>
+                        <span class="roi-card-desc">If all prompts were routed to Gemini / OpenAI</span>
+                    </div>
+                    <div class="roi-card card-vantage">
+                        <span class="roi-card-label">Actual Vantage Cost</span>
+                        <span class="roi-card-value" id="val-vantage-cost">$0.00</span>
+                        <span class="roi-card-desc">With three-tier local routing &amp; caching active</span>
+                    </div>
+                    <div class="roi-card card-savings">
+                        <span class="roi-card-label">Estimated Monthly Savings</span>
+                        <span class="roi-card-value savings-highlight" id="val-savings-amount">$0.00</span>
+                        <span class="roi-card-desc">Direct hardware-efficiency cost reduction</span>
+                    </div>
+                </div>
+
+                <!-- ROI Efficiency Bar -->
+                <div class="savings-progress-section">
+                    <div class="savings-progress-header">
+                        <span>Cloud Spend Reduction Efficiency</span>
+                        <span id="val-savings-percentage" class="efficiency-percentage">0%</span>
+                    </div>
+                    <div class="savings-progress-bar">
+                        <div id="val-savings-progress-fill" class="savings-progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Informational Routing Tier Table -->
+                <div class="routing-reference-card">
+                    <h4>Model Stack Topology &amp; Unit Costs</h4>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tier / Role</th>
+                                    <th>Assigned Model</th>
+                                    <th>Classification Logic</th>
+                                    <th>Unit Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge-local">Local Fast</span></td>
+                                    <td><strong>qwen2.5-coder:7b</strong></td>
+                                    <td>Short prompts (&lt; 800 chars) or Sensitive credentials block</td>
+                                    <td style="color: var(--route-local); font-weight: 600;">$0.0000</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge-local">Local Main</span></td>
+                                    <td><strong>qwen3.5:9b</strong></td>
+                                    <td>Standard programming requests (800 - 2000 chars)</td>
+                                    <td style="color: var(--route-local); font-weight: 600;">$0.0000</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge-local">Local Mid</span></td>
+                                    <td><strong>qwen2.5-coder:7b</strong></td>
+                                    <td>Complex queries without real-time/freshness needs</td>
+                                    <td style="color: var(--route-local); font-weight: 600;">$0.0000</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge-cloud">Cloud Escalation</span></td>
+                                    <td><strong>gemini-2.5-flash</strong></td>
+                                    <td>Freshness keywords (Web Search) or Local tier error fallback</td>
+                                    <td style="color: var(--text-muted);">$0.0100 / 1K</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

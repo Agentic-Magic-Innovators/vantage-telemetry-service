@@ -1,0 +1,219 @@
+<div class="hub-container" style="max-width: 1200px; margin: 0 auto;">
+    <div class="hub-header">
+        <h2>Project Goal &amp; Strategic Roadmap</h2>
+        <p>Track the future evolution of Vantage Harness local-first routing gateway.</p>
+    </div>
+
+    <!-- Primary Objectives & Success Metrics -->
+    <div class="roadmap-grid">
+        <div class="roadmap-card full-width" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 2rem;  margin-bottom: 2rem;">
+            <div class="roadmap-card-header" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                <span class="card-icon" style="font-size: 1.75rem;">🎯</span>
+                <h3 style="font-size: 1.4rem; font-weight: 700; color: #ffffff; margin: 0;">Primary Objective</h3>
+            </div>
+            <p class="objective-lead" style="font-size: 1.1rem; color: var(--text-main); line-height: 1.6; margin-bottom: 2rem;">
+                Ship an enterprise AI coding tool that gives engineering managers cost control, legal/compliance teams data governance, and developers the best available model for every task — without manual switching or workflow disruption.
+            </p>
+            <div class="metrics-subgrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+                <div class="submetric-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.25rem;">
+                    <div class="submetric-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Local Routing Target</div>
+                    <div class="submetric-value" style="font-size: 1.8rem; font-weight: 800; color: var(--route-local);">&gt; 70%</div>
+                    <div class="submetric-desc" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Prompts served locally via Ollama</div>
+                </div>
+                <div class="submetric-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.25rem;">
+                    <div class="submetric-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Cloud Cost Reduction</div>
+                    <div class="submetric-value" style="font-size: 1.8rem; font-weight: 800; color: #3b82f6;">&gt; 60%</div>
+                    <div class="submetric-desc" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Savings vs all-cloud baseline spend</div>
+                </div>
+                <div class="submetric-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.25rem;">
+                    <div class="submetric-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">PII/Credential Block</div>
+                    <div class="submetric-value" style="font-size: 1.8rem; font-weight: 800; color: var(--warning);">100%</div>
+                    <div class="submetric-desc" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Sensitive prompts blocked from cloud</div>
+                </div>
+                <div class="submetric-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.25rem;">
+                    <div class="submetric-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Developer Setup Time</div>
+                    <div class="submetric-value" style="font-size: 1.8rem; font-weight: 800; color: var(--brand-secondary);">&lt; 15 min</div>
+                    <div class="submetric-desc" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Zero-workflow disruption onboarding</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Split Layout: Problem vs Solution -->
+    <div class="roadmap-split-layout" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-top: 2rem;">
+        <div class="table-card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem; ">
+            <h2 style="font-size: 1.25rem; font-weight: 600; color: #ffffff; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">⚠️ Enterprise AI Gaps &amp; Challenges</h2>
+            <ul class="gap-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 1.25rem;">
+                <li style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">
+                    <strong style="color: var(--danger); display: block; margin-bottom: 0.25rem;">Uncontrolled Cloud Spend</strong>
+                    Naive cloud API calls for autocomplete and small refactors compound to massive enterprise monthly bills ($8k-$15k per 100 devs).
+                </li>
+                <li style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">
+                    <strong style="color: var(--danger); display: block; margin-bottom: 0.25rem;">Data Governance Failure</strong>
+                    Proprietary codebase context, credentials, and API keys are leaked to third-party cloud models without IT security audit logs.
+                </li>
+                <li style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">
+                    <strong style="color: var(--danger); display: block; margin-bottom: 0.25rem;">Zero Productivity Analytics</strong>
+                    Engineering leaders cannot track suggestion acceptance rates or code churn attribution to justify license costs.
+                </li>
+            </ul>
+        </div>
+
+        <div class="table-card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem; ">
+            <h2 style="font-size: 1.25rem; font-weight: 600; color: #ffffff; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">✨ The Vantage Gateway Solution</h2>
+            <ul class="solution-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 1.25rem;">
+                <li style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">
+                    <strong style="color: var(--route-local); display: block; margin-bottom: 0.25rem;">3-Tier Local-First Routing</strong>
+                    Routes short or simple queries to fast local models, and medium-complexity queries to mid local reasoning tiers.
+                </li>
+                <li style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">
+                    <strong style="color: var(--route-local); display: block; margin-bottom: 0.25rem;">Gateway Policy Enforcement</strong>
+                    Regex-based sensitive credentials filter blocks any exfiltration before cloud API calls execute.
+                </li>
+                <li style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">
+                    <strong style="color: var(--route-local); display: block; margin-bottom: 0.25rem;">Granular Cost &amp; Savings Telemetry</strong>
+                    Logs route taken, tokens consumed, and actual savings directly in a localized audit stream.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Currently Shipped vs Remaining Gaps -->
+    <div class="roadmap-split-layout" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-top: 2rem;">
+        <div class="table-card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem; ">
+            <h2 style="font-size: 1.25rem; font-weight: 600; color: #ffffff; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">✅ Currently Shipped (v3.0 Release)</h2>
+            <div class="shipped-badge-container" style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                <span class="feature-tag" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">✔ 3-Tier Local Routing Models</span>
+                <span class="feature-tag" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">✔ Cloud Escalation &amp; Web Grounding</span>
+                <span class="feature-tag" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">✔ Sensitive Data Regex Filtering</span>
+                <span class="feature-tag" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">✔ Real-Time Activity Log Search</span>
+                <span class="feature-tag" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">✔ Route filtering dropdown controls</span>
+                <span class="feature-tag" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">✔ SSE Blinking Cursor UI Console</span>
+                <span class="feature-tag" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">✔ LRU &amp; Redis Caching Backbone</span>
+                <span class="feature-tag" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">✔ Hot-Reload Gateway Config API</span>
+                <span class="feature-tag" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">✔ Dockerized Development Stack</span>
+                <span class="feature-tag" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">★ BM25 Corpus Relevance Scoring</span>
+                <span class="feature-tag" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">★ ASGI Compression Middleware</span>
+                <span class="feature-tag" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">★ Output Shaper (All Providers)</span>
+                <span class="feature-tag" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">★ Semantic Cache (nomic-embed-text)</span>
+                <span class="feature-tag" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">★ PostgreSQL Persistence (metrics/auth)</span>
+                <span class="feature-tag" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">★ SearXNG Web Search Integration</span>
+                <span class="feature-tag" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">★ Modular Service Refactor (completion_service.py)</span>
+            </div>
+        </div>
+
+        <div class="table-card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem; ">
+            <h2 style="font-size: 1.25rem; font-weight: 600; color: #ffffff; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">🔍 Remaining Gaps (Roadmap Goals)</h2>
+            <ul class="gap-bullet-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+                <li style="font-size: 0.9rem; line-height: 1.4; color: var(--text-main); display: flex; align-items: flex-start; gap: 0.5rem;">
+                    <span style="color: var(--warning);">⚡</span>
+                    <span><strong>Context Planner (SDD Component 3):</strong> Budget and compress token payloads dynamically.</span>
+                </li>
+                <li style="font-size: 0.9rem; line-height: 1.4; color: var(--text-main); display: flex; align-items: flex-start; gap: 0.5rem;">
+                    <span style="color: var(--warning);">⚡</span>
+                    <span><strong>Knowledge Graph (SDD Component 5):</strong> Index class/method dependencies &amp; codebases.</span>
+                </li>
+                <li style="font-size: 0.9rem; line-height: 1.4; color: var(--text-main); display: flex; align-items: flex-start; gap: 0.5rem;">
+                    <span style="color: var(--warning);">⚡</span>
+                    <span><strong>Semantic Retrieval (SDD Component 6):</strong> Vector store implementation via sqlite-vec.</span>
+                </li>
+                <li style="font-size: 0.9rem; line-height: 1.4; color: var(--text-main); display: flex; align-items: flex-start; gap: 0.5rem;">
+                    <span style="color: var(--warning);">⚡</span>
+                    <span><strong>Output Guardrails (Response Optimizer):</strong> Parse generated blocks for errors.</span>
+                </li>
+                <li style="font-size: 0.9rem; line-height: 1.4; color: var(--text-main); display: flex; align-items: flex-start; gap: 0.5rem;">
+                    <span style="color: var(--warning);">⚡</span>
+                    <span><strong>Budget Enforcement:</strong> Restrict monthly/daily spending caps across teams.</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Technical Timeline -->
+    <div class="hub-header" style="margin-top: 4rem; text-align: center; margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.8rem; font-weight: 800; color: #ffffff;">Technical SDD Alignment Timeline</h2>
+        <p style="color: var(--text-muted); font-size: 1rem; max-width: 600px; margin: 0.5rem auto 0 auto;">v3.0 current coverage: ~48% (+18% from v2.0). Plan for raising coverage to ~92% across three remaining milestones.</p>
+    </div>
+
+    <div class="timeline-container" style="display: flex; flex-direction: column; gap: 2rem; position: relative; max-width: 1000px; margin: 0 auto;">
+        <!-- Milestone 1 -->
+        <div class="timeline-item" style="display: flex; gap: 1.5rem; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem; ">
+            <div class="timeline-point active" style="width: 36px; height: 36px; border-radius: 50%; background: rgba(59, 130, 246, 0.15); border: 2px solid var(--brand-primary); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0; box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);">1</div>
+            <div class="timeline-content-wrapper" style="flex: 1;">
+                <div class="timeline-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <span class="timeline-phase-title" style="font-size: 1.1rem; font-weight: 700; color: #60a5fa;">Tier 1: Quick Wins (Weeks 1–4)</span>
+                    <span class="timeline-badge phase-active" style="background: rgba(59, 130, 246, 0.12); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2); padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700;">In Progress</span>
+                </div>
+                <p class="timeline-phase-desc" style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 1rem;">Leverage available local model configurations to boost immediate routing intelligence.</p>
+                <ul class="timeline-bullets" style="list-style-type: none; padding-left: 0; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--text-main);">
+                    <li>👉 <strong>Semantic Retrieval (SDD Comp. 6):</strong> Shift from lexical matching to vector similarity using `nomic-embed-text` and local `sqlite-vec`.</li>
+                    <li>👉 <strong>Intent Classification (SDD Comp. 2):</strong> Classify queries by embedding prompts against 9 developer intent centroids.</li>
+                    <li>👉 <strong>Prompt Templates (SDD Comp. 7):</strong> Deploy YAML template configurations matching specific user intents.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Milestone 2 -->
+        <div class="timeline-item" style="display: flex; gap: 1.5rem; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem; ">
+            <div class="timeline-point" style="width: 36px; height: 36px; border-radius: 50%; background: #0b0f19; border: 2px solid var(--border-light); color: var(--text-muted); display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">2</div>
+            <div class="timeline-content-wrapper" style="flex: 1;">
+                <div class="timeline-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <span class="timeline-phase-title" style="font-size: 1.1rem; font-weight: 700; color: #ffffff;">Tier 2: Foundation Shifts (Weeks 5–8)</span>
+                    <span class="timeline-badge phase-pending" style="background: rgba(255, 255, 255, 0.04); color: var(--text-muted); border: 1px solid var(--border-light); padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700;">Planned</span>
+                </div>
+                <p class="timeline-phase-desc" style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 1rem;">Establish structured workspace dependency graphs and robust token planning.</p>
+                <ul class="timeline-bullets" style="list-style-type: none; padding-left: 0; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--text-main);">
+                    <li>👉 <strong>Context Planner (SDD Comp. 3):</strong> Build dynamic context planner defining tokens and chunk allocation limits.</li>
+                    <li>👉 <strong>Repository Knowledge Graph (SDD Comp. 5):</strong> Build class dependency structures and import syntax mapping.</li>
+                    <li>👉 <strong>Context Optimization (SDD Comp. 4):</strong> Clean overlapping files and summarize oversized context content.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Milestone 3 -->
+        <div class="timeline-item" style="display: flex; gap: 1.5rem; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem; ">
+            <div class="timeline-point" style="width: 36px; height: 36px; border-radius: 50%; background: #0b0f19; border: 2px solid var(--border-light); color: var(--text-muted); display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">3</div>
+            <div class="timeline-content-wrapper" style="flex: 1;">
+                <div class="timeline-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <span class="timeline-phase-title" style="font-size: 1.1rem; font-weight: 700; color: #ffffff;">Tier 3: Enterprise Differentiators (Weeks 9–12)</span>
+                    <span class="timeline-badge phase-pending" style="background: rgba(255, 255, 255, 0.04); color: var(--text-muted); border: 1px solid var(--border-light); padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700;">Planned</span>
+                </div>
+                <p class="timeline-phase-desc" style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 1rem;">Implement security validation layers and advanced corporate integrations.</p>
+                <ul class="timeline-bullets" style="list-style-type: none; padding-left: 0; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--text-main);">
+                    <li>👉 <strong>Response Optimizer &amp; Guardrails:</strong> Syntax validation and outbound leakage guardrails on model generation blocks.</li>
+                    <li>👉 <strong>Vector Repo Search (SDD Comp. 6):</strong> Extend semantic cache embeddings to file-chunk retrieval using sqlite-vec for full vector-based repo context.</li>
+                    <li>👉 <strong>MCP Connector Framework:</strong> Dynamic external queries to Jira, Confluence, and GitHub resources.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Horizons -->
+    <div class="hub-header" style="margin-top: 4rem; text-align: center; margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.8rem; font-weight: 800; color: #ffffff;">Long-Term Product Horizons</h2>
+        <p style="color: var(--text-muted); font-size: 1rem; max-width: 600px; margin: 0.5rem auto 0 auto;">Scale out features to transition the local gateway prototype into an enterprise platform.</p>
+    </div>
+
+    <div class="product-horizons-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+        <div class="horizon-card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem;">
+            <span class="horizon-badge h-a" style="background: rgba(16, 185, 129, 0.15); color: #34d399; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; text-transform: uppercase;">Phase A</span>
+            <h4 style="font-size: 1rem; font-weight: 600; margin: 0.75rem 0 0.5rem 0; color: #ffffff;">Identity &amp; Governance</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">Extract user/team identities, containerize standard deployments, and apply cloud budget enforcement policies.</p>
+        </div>
+        <div class="horizon-card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem;">
+            <span class="horizon-badge h-b" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; text-transform: uppercase;">Phase B</span>
+            <h4 style="font-size: 1rem; font-weight: 600; margin: 0.75rem 0 0.5rem 0; color: #ffffff;">Token Optimization</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">Integrate LLMLingua prompt compression, semantic deduplication, and context window smart truncation.</p>
+        </div>
+        <div class="horizon-card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem;">
+            <span class="horizon-badge h-c" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; text-transform: uppercase;">Phase C</span>
+            <h4 style="font-size: 1rem; font-weight: 600; margin: 0.75rem 0 0.5rem 0; color: #ffffff;">Developer Analytics</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">Track suggestion acceptance ratios, measure time-to-accept metrics, and monitor git-churn contribution.</p>
+        </div>
+        <div class="horizon-card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem;">
+            <span class="horizon-badge h-d" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; text-transform: uppercase;">Phase D</span>
+            <h4 style="font-size: 1rem; font-weight: 600; margin: 0.75rem 0 0.5rem 0; color: #ffffff;">Enterprise Hardening</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">Establish SSO OIDC JWT auth checks, named tenant space isolation, and NER-based DLP PII redactions.</p>
+        </div>
+    </div>
+</div>

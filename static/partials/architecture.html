@@ -1,0 +1,344 @@
+<div class="hub-container" style="max-width: 1200px; margin: 0 auto;">
+    <div class="hub-header">
+        <h2>Solution Architecture & SDD Alignment</h2>
+        <p>Overview of the Vantage Harness modules aligned to the Platform Context Engineering reference architecture.</p>
+    </div>
+
+    <!-- Interactive Context Diagram Section -->
+    <div class="diagram-section-wrapper" style="margin: 2rem 0 4rem 0;">
+        <div class="table-card" style="text-align: left; padding: 2rem;">
+            <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h3 style="font-size: 1.5rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">Interactive System Context Diagram</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">Hover over the components to inspect their integration details, routing heuristics, and interfaces.</p>
+                </div>
+                <div class="diagram-legend" style="display: flex; gap: 1rem; font-size: 0.85rem; font-weight: 600; flex-wrap: wrap;">
+                    <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="width: 12px; height: 12px; border-radius: 3px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: inline-block;"></span> Gateway</span>
+                    <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="width: 12px; height: 12px; border-radius: 3px; background: #059669; display: inline-block;"></span> Local Stack</span>
+                    <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="width: 12px; height: 12px; border-radius: 3px; background: #4f46e5; display: inline-block;"></span> Cloud Escalation</span>
+                    <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="width: 12px; height: 12px; border-radius: 3px; background: #336791; display: inline-block;"></span> PostgreSQL</span>
+                    <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="width: 12px; height: 12px; border-radius: 3px; background: #14b8a6; display: inline-block;"></span> Web Search</span>
+                </div>
+            </div>
+
+            <div class="diagram-split-layout">
+                <div class="svg-container" style="background: rgba(255, 255, 255, 0.4); border: 1px solid var(--border-light); border-radius: 8px; padding: 1rem; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 800 700" class="context-svg" width="100%" height="100%">
+                        <defs>
+                            <linearGradient id="grad-ide" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ffffff" />
+                                <stop offset="100%" stop-color="#f3f4f6" />
+                            </linearGradient>
+                            <linearGradient id="grad-gateway" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3b82f6" />
+                                <stop offset="100%" stop-color="#8b5cf6" />
+                            </linearGradient>
+                            <linearGradient id="grad-local" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10b981" />
+                                <stop offset="100%" stop-color="#059669" />
+                            </linearGradient>
+                            <linearGradient id="grad-cloud" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#6366f1" />
+                                <stop offset="100%" stop-color="#4f46e5" />
+                            </linearGradient>
+                            <linearGradient id="grad-obs" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#f59e0b" />
+                                <stop offset="100%" stop-color="#d97706" />
+                            </linearGradient>
+                            <linearGradient id="grad-postgres" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#4d8fc4" />
+                                <stop offset="100%" stop-color="#336791" />
+                            </linearGradient>
+                            <linearGradient id="grad-search" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#2dd4bf" />
+                                <stop offset="100%" stop-color="#0d9488" />
+                            </linearGradient>
+                            <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                                <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.06" />
+                            </filter>
+                            <marker id="arrow-local" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 2 L 8 5 L 0 8 z" fill="#059669" />
+                            </marker>
+                            <marker id="arrow-cloud" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 2 L 8 5 L 0 8 z" fill="#4f46e5" />
+                            </marker>
+                            <marker id="arrow-generic" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 2 L 8 5 L 0 8 z" fill="#9ca3af" />
+                            </marker>
+                            <marker id="arrow-postgres" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 2 L 8 5 L 0 8 z" fill="#336791" />
+                            </marker>
+                            <marker id="arrow-search" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 2 L 8 5 L 0 8 z" fill="#0d9488" />
+                            </marker>
+                        </defs>
+
+                        <!-- Connection Lines / Paths -->
+                        <path d="M 190 220 L 280 220" stroke="#9ca3af" stroke-width="2.5" fill="none" marker-end="url(#arrow-generic)" id="path-ide-gateway" class="conn-path" />
+                        <path d="M 400 400 L 400 455" stroke="#059669" stroke-width="2.5" stroke-dasharray="5,3" fill="none" marker-end="url(#arrow-local)" id="path-gateway-local" class="conn-path" />
+                        <path d="M 500 185 L 580 135" stroke="#4f46e5" stroke-width="2.5" fill="none" marker-end="url(#arrow-cloud)" id="path-gateway-cloud" class="conn-path" />
+                        <path d="M 500 255 L 580 305" stroke="#f59e0b" stroke-width="2.5" fill="none" marker-end="url(#arrow-generic)" id="path-gateway-observability" class="conn-path" />
+                        <path d="M 320 400 L 250 460 L 250 585" stroke="#336791" stroke-width="2.5" stroke-dasharray="5,3" fill="none" marker-end="url(#arrow-postgres)" id="path-gateway-postgres" class="conn-path" />
+                        <path d="M 480 400 L 550 460 L 550 585" stroke="#0d9488" stroke-width="2.5" fill="none" marker-end="url(#arrow-search)" id="path-gateway-searxng" class="conn-path" />
+
+                        <!-- IDE Clients Node -->
+                        <g class="diagram-node" data-node="ide" transform="translate(0,0)" style="cursor: pointer;">
+                            <rect x="30" y="145" width="160" height="150" rx="16" fill="url(#grad-ide)" stroke="#d1d5db" stroke-width="2" filter="url(#shadow)" class="node-rect" />
+                            <text x="110" y="178" font-size="15" font-weight="800" text-anchor="middle" fill="#1f2937">💻 Clients</text>
+                            <line x1="50" y1="195" x2="170" y2="195" stroke="#e5e7eb" stroke-width="1" />
+                            <text x="50" y="218" font-size="10.5" font-weight="600" fill="#4b5563">VS Code (Continue)</text>
+                            <text x="50" y="238" font-size="10.5" font-weight="600" fill="#4b5563">VS Code (Cline)</text>
+                            <text x="50" y="258" font-size="10.5" font-weight="600" fill="#4b5563">Cursor Editor</text>
+                            <text x="50" y="278" font-size="9.5" font-style="italic" fill="#9ca3af">Endpoint: :50123</text>
+                        </g>
+
+                        <!-- Gateway Node -->
+                        <g class="diagram-node active-hub" data-node="gateway" transform="translate(0,0)" style="cursor: pointer;">
+                            <rect x="290" y="70" width="220" height="330" rx="20" fill="url(#grad-gateway)" filter="url(#shadow)" class="node-rect-gw" />
+                            <rect x="294" y="74" width="212" height="322" rx="16" fill="#1e1b4b" opacity="0.95" class="node-rect-gw-inner" />
+                            <text x="400" y="105" font-size="15" font-weight="800" text-anchor="middle" fill="#ffffff">🛡️ Vantage Harness</text>
+                            <text x="400" y="122" font-size="9" font-weight="600" text-anchor="middle" fill="#a5b4fc" letter-spacing="1">GATEWAY ROUTER</text>
+                            <g transform="translate(310, 140)">
+                                <rect x="0" y="0" width="180" height="22" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+                                <text x="10" y="15" font-size="10" fill="#e0e7ff" font-weight="600">1. Gateway (API only)</text>
+                                <rect x="0" y="26" width="180" height="22" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+                                <text x="10" y="41" font-size="10" fill="#e0e7ff" font-weight="600">2. Intent Detection</text>
+                                <rect x="0" y="52" width="180" height="22" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+                                <text x="10" y="67" font-size="10" fill="#e0e7ff" font-weight="600">4. Context Engineering</text>
+                                <rect x="0" y="78" width="180" height="22" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+                                <text x="10" y="93" font-size="10" fill="#e0e7ff" font-weight="600">7. Prompt Builder</text>
+                                <rect x="0" y="104" width="180" height="22" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+                                <text x="10" y="119" font-size="10" fill="#e0e7ff" font-weight="600">8. Model Router</text>
+                                <line x1="0" y1="136" x2="180" y2="136" stroke="rgba(251,191,36,0.3)" stroke-width="1" />
+                                <text x="90" y="148" font-size="8" text-anchor="middle" fill="#fbbf24" font-weight="700" letter-spacing="0.5">★ v3.0 Context Intelligence</text>
+                                <rect x="0" y="154" width="180" height="22" rx="5" fill="rgba(251,191,36,0.07)" stroke="rgba(251,191,36,0.25)" stroke-width="1" />
+                                <text x="10" y="169" font-size="10" fill="#fde68a" font-weight="600">BM25 Relevance Scorer</text>
+                                <rect x="0" y="180" width="180" height="22" rx="5" fill="rgba(251,191,36,0.07)" stroke="rgba(251,191,36,0.25)" stroke-width="1" />
+                                <text x="10" y="195" font-size="10" fill="#fde68a" font-weight="600">Compression Middleware</text>
+                                <rect x="0" y="206" width="180" height="22" rx="5" fill="rgba(251,191,36,0.07)" stroke="rgba(251,191,36,0.25)" stroke-width="1" />
+                                <text x="10" y="221" font-size="10" fill="#fde68a" font-weight="600">Output Shaper</text>
+                                <rect x="0" y="232" width="180" height="22" rx="5" fill="rgba(251,191,36,0.07)" stroke="rgba(251,191,36,0.25)" stroke-width="1" />
+                                <text x="10" y="247" font-size="10" fill="#fde68a" font-weight="600">Semantic Cache</text>
+                            </g>
+                        </g>
+
+                        <!-- Local Stack Node -->
+                        <g class="diagram-node" data-node="local" transform="translate(0,0)" style="cursor: pointer;">
+                            <rect x="290" y="460" width="220" height="95" rx="16" fill="url(#grad-local)" stroke="#047857" stroke-width="2" filter="url(#shadow)" class="node-rect" />
+                            <text x="400" y="488" font-size="13.5" font-weight="800" text-anchor="middle" fill="#ffffff">🧠 Local Stack (Ollama)</text>
+                            <line x1="310" y1="500" x2="490" y2="500" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+                            <text x="400" y="518" font-size="10" font-weight="600" text-anchor="middle" fill="#a7f3d0">qwen2.5-coder:7b (Fast) | qwen3.5:9b (Main)</text>
+                            <text x="400" y="536" font-size="10" font-weight="600" text-anchor="middle" fill="#a7f3d0">qwen2.5-coder:7b (Mid) — config-driven</text>
+                        </g>
+
+                        <!-- Cloud Escalation Node -->
+                        <g class="diagram-node" data-node="cloud" transform="translate(0,0)" style="cursor: pointer;">
+                            <rect x="590" y="55" width="180" height="120" rx="16" fill="url(#grad-cloud)" stroke="#4338ca" stroke-width="2" filter="url(#shadow)" class="node-rect" />
+                            <text x="680" y="85" font-size="13.5" font-weight="800" text-anchor="middle" fill="#ffffff">☁️ Cloud Escalation</text>
+                            <line x1="610" y1="98" x2="750" y2="98" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+                            <text x="610" y="118" font-size="10.5" font-weight="600" fill="#e0e7ff">Gemini 2.5 Flash</text>
+                            <text x="610" y="136" font-size="10" fill="#c7d2fe">🌐 Google Search Grounding</text>
+                            <text x="610" y="154" font-size="10" fill="#c7d2fe">🔗 OpenAI / Cursor SDK</text>
+                        </g>
+
+                        <!-- Observability Node -->
+                        <g class="diagram-node" data-node="observability" transform="translate(0,0)" style="cursor: pointer;">
+                            <rect x="590" y="245" width="180" height="120" rx="16" fill="url(#grad-obs)" stroke="#b45309" stroke-width="2" filter="url(#shadow)" class="node-rect" />
+                            <text x="680" y="275" font-size="13.5" font-weight="800" text-anchor="middle" fill="#ffffff">📊 Obs &amp; Cache</text>
+                            <line x1="610" y1="288" x2="750" y2="288" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+                            <text x="610" y="304" font-size="10" font-weight="600" fill="#ffedd5">Exact Cache (LRU/Redis)</text>
+                            <text x="610" y="320" font-size="10" fill="#fed7aa">Semantic Cache (nomic-embed)</text>
+                            <text x="610" y="336" font-size="10" fill="#fed7aa">metrics.jsonl log</text>
+                            <text x="610" y="352" font-size="10" fill="#fed7aa">FinOps Cost Dashboard</text>
+                        </g>
+
+                        <!-- PostgreSQL Node -->
+                        <g class="diagram-node" data-node="postgres" transform="translate(0,0)" style="cursor: pointer;">
+                            <rect x="150" y="585" width="200" height="95" rx="16" fill="url(#grad-postgres)" stroke="#2d5f8a" stroke-width="2" filter="url(#shadow)" class="node-rect" />
+                            <text x="250" y="613" font-size="13.5" font-weight="800" text-anchor="middle" fill="#ffffff">🐘 PostgreSQL</text>
+                            <line x1="170" y1="625" x2="330" y2="625" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+                            <text x="250" y="642" font-size="9.5" font-weight="600" text-anchor="middle" fill="#dbeafe">metrics · api_tokens · admins</text>
+                            <text x="250" y="658" font-size="9.5" font-weight="600" text-anchor="middle" fill="#dbeafe">ui_sessions (asyncpg pool)</text>
+                        </g>
+
+                        <!-- SearXNG / Web Search Node -->
+                        <g class="diagram-node" data-node="searxng" transform="translate(0,0)" style="cursor: pointer;">
+                            <rect x="450" y="585" width="200" height="95" rx="16" fill="url(#grad-search)" stroke="#0f766e" stroke-width="2" filter="url(#shadow)" class="node-rect" />
+                            <text x="550" y="613" font-size="13.5" font-weight="800" text-anchor="middle" fill="#ffffff">🌐 SearXNG</text>
+                            <line x1="470" y1="625" x2="630" y2="625" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+                            <text x="550" y="642" font-size="9.5" font-weight="600" text-anchor="middle" fill="#ccfbf1">Metasearch (sibling container)</text>
+                            <text x="550" y="658" font-size="9.5" font-weight="600" text-anchor="middle" fill="#ccfbf1">Freshness / websearch route</text>
+                        </g>
+
+                        <!-- Connection Labels -->
+                        <g transform="translate(196, 212)" class="diagram-path-label" id="label-ide-gateway">
+                            <rect x="0" y="-10" width="70" height="16" rx="4" fill="#ffffff" stroke="#d1d5db" stroke-width="1" filter="url(#shadow)" />
+                            <text x="35" y="2" font-size="8" font-weight="800" text-anchor="middle" fill="#374151">HTTP API</text>
+                        </g>
+                        <g transform="translate(366, 428)" class="diagram-path-label" id="label-gateway-local">
+                            <rect x="0" y="-10" width="68" height="16" rx="4" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1" filter="url(#shadow)" />
+                            <text x="34" y="2" font-size="8" font-weight="800" text-anchor="middle" fill="#047857">Local Route</text>
+                        </g>
+                        <g transform="translate(506, 148)" class="diagram-path-label" id="label-gateway-cloud">
+                            <rect x="0" y="-10" width="68" height="16" rx="4" fill="#eef2ff" stroke="#c7d2fe" stroke-width="1" filter="url(#shadow)" />
+                            <text x="34" y="2" font-size="8" font-weight="800" text-anchor="middle" fill="#4338ca">Escalate</text>
+                        </g>
+                        <g transform="translate(508, 272)" class="diagram-path-label" id="label-gateway-observability">
+                            <rect x="0" y="-10" width="62" height="16" rx="4" fill="#fffbeb" stroke="#fde68a" stroke-width="1" filter="url(#shadow)" />
+                            <text x="31" y="2" font-size="8" font-weight="800" text-anchor="middle" fill="#b45309">Log Metrics</text>
+                        </g>
+                        <g transform="translate(196, 470)" class="diagram-path-label" id="label-gateway-postgres">
+                            <rect x="0" y="-10" width="76" height="16" rx="4" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1" filter="url(#shadow)" />
+                            <text x="38" y="2" font-size="8" font-weight="800" text-anchor="middle" fill="#2d5f8a">Persistence</text>
+                        </g>
+                        <g transform="translate(520, 470)" class="diagram-path-label" id="label-gateway-searxng">
+                            <rect x="0" y="-10" width="76" height="16" rx="4" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1" filter="url(#shadow)" />
+                            <text x="38" y="2" font-size="8" font-weight="800" text-anchor="middle" fill="#0f766e">Web Search</text>
+                        </g>
+                    </svg>
+                </div>
+
+                <div class="diagram-info-panel" id="diagram-info-panel" style="background: rgba(255,255,255,0.6); border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; min-height: 250px;">
+                    <div class="info-placeholder" style="text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔍</div>
+                        <h4 style="font-size: 1.15rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.5rem;">Explore the Architecture</h4>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin: 0;">Hover over any system component node (IDE Clients, Gateway, Local Stack, Cloud, Metrics) on the left diagram to view detailed structural metadata, routing rules, and interaction descriptions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="architecture-layout" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; text-align: left; margin-top: 1rem;">
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🚪</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">1. Request Gateway</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">FastAPI app on port 50123: routes, auth, admin/config-reload endpoints, and app-wide state (config, caches, Ollama health flag). Delegates all per-request orchestration to Completion Service.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/request_gateway.py</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧬</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">Completion Service</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Orchestrates a single request end-to-end: routing decision, exact/semantic cache lookup, repo/websearch enrichment, local streaming with cloud fallback, and metrics. Owns no state — receives it from the gateway per request.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/completion_service.py</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧠</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">2. Intent Detection Engine</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Classifies incoming queries for keyword complexity, prompt length, freshness search intent, and exfiltration policy matches.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/intent_detection.py</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🏗️</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">4. Context Engineering</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Builds codebase context by scoring, ranking, and selecting relevant workspace code files to inject into local prompt contexts.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/context_engineering.py</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">✏️</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">7. Prompt Builder</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Compiles prompts, system instructions, dynamic parameters, and context blocks into format payloads for LLM invocation.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/prompt_builder.py</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔀</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">8. Model Router</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Routes requests locally through 3 tier Ollama models or escalates to cloud providers (Gemini / OpenAI / Cursor SDK subprocess).</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/model_router.py</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📦</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">Backbone &amp; Subsystems</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Services that support execution: Exact-match LRU/Redis cache (SHA-256), Semantic Cache (cosine similarity via nomic-embed-text), FinOps observability, and Ollama model health monitoring.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/context_cache.py, semantic_cache.py, observability.py</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🐘</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">PostgreSQL Persistence</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">System-of-record for the gateway: <code>metrics</code>, <code>api_tokens</code>, <code>admins</code>, and <code>ui_sessions</code> tables via an asyncpg connection pool. Metrics fall back to <code>data/metrics.jsonl</code> if the DB insert fails.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/db.py — docker-compose service "db"</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🌐</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">SearXNG Web Search</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Self-hosted metasearch engine, called by the gateway's <code>websearch</code> route for freshness queries. Runs as a sibling container (<code>http://searxng:8080</code>); results are injected as context and the request falls through to local dispatch — no cloud call needed for a lookup.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/websearch.py — docker-compose service "searxng"</code>
+        </div>
+    </div>
+
+    <div class="hub-header" style="margin-top: 4rem;">
+        <h2>Context Intelligence (v3.0)</h2>
+        <p>Four new modules shipped in v3.0 — integrated natively with zero additional runtime dependencies. All degrade gracefully.</p>
+    </div>
+
+    <div class="architecture-layout" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; text-align: left; margin-top: 1rem;">
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📐</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">BM25 Corpus Scorer</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Replaces the keyword counter in repo context retrieval with IDF-weighted scoring. Rare identifiers earn high weight; common tokens (def, import) approach zero. Includes TF saturation, length normalisation, long-token bonus (+0.3), and path boost (+0.15).</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/bm25.py — SDD 4 +30%, SDD 6 +60%</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🗜️</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">ASGI Compression Middleware</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Intercepts all POST requests before route handlers. Applies three transforms: rolling window (keeps system + first + last N turns), SmartCrush (collapses large JSON arrays), and code-block dedup (MD5 back-references). Stats in response headers.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/compression.py — SDD 1 +15%, SDD 3 +30%</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">✂️</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">Output Shaper</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Reduces cloud response verbosity by appending byte-stable verbosity instructions to the system prompt before every cloud dispatch. Turn classifier detects NEW_USER_ASK (level 2), MECHANICAL_CONTINUATION (level 3), or ERROR_CONTINUATION (level 1). Works for all providers: Gemini, OpenAI, and Cursor.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/output_shaper.py — SDD 7 +10%, Response Optimizer +20%</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">Semantic Cache</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Second cache layer (after SHA-256 exact cache, before inference). Embeds the raw user query with <strong>nomic-embed-text:latest</strong> via Ollama and returns a stored response if cosine similarity ≥ 0.92. Disables itself after 3 consecutive Ollama failures. ~5–20 ms lookup.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600;">app/semantic_cache.py — SDD 6 +60%</code>
+        </div>
+    </div>
+
+    <div class="hub-header" style="margin-top: 4rem;">
+        <h2>Model Routing Stack &amp; Heuristics</h2>
+        <p>Current 3-tier local model stack and cloud escalation routing configurations.</p>
+    </div>
+
+    <div class="architecture-layout" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; text-align: left; margin-top: 1rem;">
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 1.5rem;">⚡</span>
+                <span class="badge-local" style="margin: 0; background: rgba(16, 185, 129, 0.15); color: #059669; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">Local Fast</span>
+            </div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">qwen2.5-coder:7b</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Serves short queries (&lt; 800 chars), basic edits, or prompts flagged by sensitive credentials filters.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600; font-family: inherit;">Fast &amp; Private</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 1.5rem;">💻</span>
+                <span class="badge-local" style="margin: 0; background: rgba(16, 185, 129, 0.15); color: #059669; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">Local Main</span>
+            </div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">qwen3.5:9b</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Primary model for standard code-writing tasks and medium-complexity queries (800–2000 chars).</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600; font-family: inherit;">Main Coding Engine</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 1.5rem;">🤖</span>
+                <span class="badge-local" style="margin: 0; background: rgba(16, 185, 129, 0.15); color: #059669; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">Local Mid</span>
+            </div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">qwen2.5-coder:7b</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Serves highly complex prompts and refactor requests that do not require real-time web context. Set via <code>ollama.midModel</code> — same model as Fast in the current config, swap independently via Admin &gt; Config.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600; font-family: inherit;">Reasoning Fallback</code>
+        </div>
+        <div class="arch-card" style="background: var(--bg-card); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 1.5rem;">☁️</span>
+                <span class="badge-cloud" style="margin: 0; background: rgba(99, 102, 241, 0.15); color: #4f46e5; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">Cloud Escalation</span>
+            </div>
+            <h3 style="color: var(--brand-primary); margin-bottom: 0.5rem; font-weight: 600;">gemini-2.5-flash</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">Handles queries requiring web grounding (freshness search keywords) and complex tasks when local fallback triggers.</p>
+            <code style="font-size: 0.8rem; color: var(--brand-secondary); display: block; margin-top: 0.5rem; font-weight: 600; font-family: inherit;">Grounded with Web Search</code>
+        </div>
+    </div>
+</div>

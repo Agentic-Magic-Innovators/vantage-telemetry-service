@@ -1,0 +1,39 @@
+version: "3.9"
+
+# Standalone telemetry-service deploy.
+# Requires PostgreSQL (use vantage-harness-db or external DATABASE_URL).
+#
+#   docker compose up -d --build
+#
+# With bundled UI static assets (default in image):
+#   http://localhost:50224/dashboard
+
+services:
+  telemetry-service:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${VANTAGE_TELEMETRY_PORT:-50224}:50224"
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://vantage:vantage@host.docker.internal:5432/vantage_migration}
+      VANTAGE_TELEMETRY_PORT: "50224"
+      GATEWAY_HOST: "0.0.0.0"
+      # No insecure fallback here on purpose -- app/secrets.py refuses to start
+      # without a real value unless VANTAGE_ALLOW_DEV_SECRETS=true. Set these
+      # (and VANTAGE_ALLOW_DEV_SECRETS if needed) in .env, see .env.example.
+      TELEMETRY_INTERNAL_KEY: ${TELEMETRY_INTERNAL_KEY:-}
+      TELEMETRY_BRIDGE_JWT_SECRET: ${TELEMETRY_BRIDGE_JWT_SECRET:-}
+      VANTAGE_ALLOW_DEV_SECRETS: ${VANTAGE_ALLOW_DEV_SECRETS:-}
+      VANTAGE_API_KEY: ${VANTAGE_API_KEY:-}
+      VANTAGE_LEGACY_API_KEY_ENABLED: ${VANTAGE_LEGACY_API_KEY_ENABLED:-}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:50223,http://localhost:50225,http://localhost:50226}
+      VANTAGE_ADMIN_USERNAME: ${VANTAGE_ADMIN_USERNAME:-admin}
+      VANTAGE_ADMIN_PASSWORD: ${VANTAGE_ADMIN_PASSWORD:-}
+      VANTAGE_UI_GOOGLE_CLIENT_ID: ${VANTAGE_UI_GOOGLE_CLIENT_ID:-}
+      VANTAGE_UI_ALLOWED_EMAILS: ${VANTAGE_UI_ALLOWED_EMAILS:-}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:50224/health', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3

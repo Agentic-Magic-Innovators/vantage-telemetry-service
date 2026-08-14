@@ -1,0 +1,280 @@
+<div class="insight-toolbar" aria-label="Dashboard filters">
+    <div>
+        <span class="eyebrow" id="dashboard-perspective">Leadership perspective</span>
+        <h2 id="dashboard-title">Engineering AI Intelligence</h2>
+        <p id="dashboard-subtitle">Delivery outcomes, AI adoption, engineering flow, cost and governance.</p>
+    </div>
+    <div class="insight-filters">
+        <label>Period<select id="insight-period"><option value="7">7 days</option><option value="30" selected>30 days</option><option value="90">90 days</option></select></label>
+        <label class="admin-only-tab">Team<select id="insight-team"><option value="all">All teams</option></select></label>
+        <label>AI tool<select id="insight-tool"><option value="all">All tools</option></select></label>
+        <button id="btn-refresh-insights" class="insight-refresh">Refresh</button>
+    </div>
+</div>
+
+<div class="metrics-grid leadership-kpis" id="metrics-grid">
+    <!-- Populated by JS -->
+    <div class="loading">Loading metrics...</div>
+</div>
+
+<!-- Dashboard Tabs Navigation -->
+<div class="dashboard-tabs-container">
+    <div class="dashboard-tabs-header">
+        <button class="dashboard-tab-btn active" data-target="tab-executive">Overview</button>
+        <button class="dashboard-tab-btn" data-target="tab-ai-insights">AI Usage</button>
+        <button class="dashboard-tab-btn" data-target="tab-delivery">Delivery &amp; PRs</button>
+        <button class="dashboard-tab-btn" data-target="tab-flow">Engineering Flow</button>
+        <button class="dashboard-tab-btn" data-target="tab-governance">Security &amp; Governance</button>
+        <button class="dashboard-tab-btn" data-target="tab-quality">Data Quality</button>
+        <button class="dashboard-tab-btn" data-target="tab-activity">Raw Events</button>
+        <button class="dashboard-tab-btn admin-only-tab" data-target="tab-spenders">Top Spenders</button>
+        <button class="dashboard-tab-btn admin-only-tab" data-target="tab-teams">Per-Team Breakdown</button>
+        <button class="dashboard-tab-btn admin-only-tab" data-target="tab-clients">By Client</button>
+        <button class="dashboard-tab-btn" data-target="tab-audit">Developer Audit Trail</button>
+        <button class="dashboard-tab-btn" data-target="tab-productivity">Productivity Sessions</button>
+    </div>
+
+    <div class="dashboard-tabs-content">
+        <div class="tab-pane active" id="tab-executive">
+            <div class="insight-layout">
+                <div class="insight-card span-2"><div class="insight-card-header"><h3>AI adoption by tool</h3><span>Usage, people and tokens</span></div><div id="tool-adoption-bars" class="bar-list"></div></div>
+                <div class="insight-card"><div class="insight-card-header"><h3>Leadership signals</h3><span>Compared with previous period</span></div><div id="leadership-signals" class="signal-list"></div></div>
+                <div class="insight-card"><div class="insight-card-header"><h3>Delivery snapshot</h3><span>PR lifecycle telemetry</span></div><div id="delivery-snapshot" class="snapshot-grid"></div></div>
+                <div class="insight-card"><div class="insight-card-header"><h3>Attention required</h3><span>Flow, governance and coverage</span></div><div id="attention-list" class="attention-list"></div></div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="tab-ai-insights">
+            <div class="insight-layout">
+                <div class="insight-card span-2"><div class="insight-card-header"><h3>Tool usage</h3><span>Tokens, active users, wait time and cost</span></div><div class="table-responsive"><table id="tool-insights-table"><thead><tr><th>Tool</th><th>Active users</th><th>Events</th><th>Tokens</th><th>AI wait</th><th>Cost</th></tr></thead><tbody></tbody></table></div></div>
+                <div class="insight-card"><div class="insight-card-header"><h3>Token mix</h3><span>Prompt vs completion</span></div><div id="token-mix" class="donut-summary"></div></div>
+                <div class="insight-card"><div class="insight-card-header"><h3>Models</h3><span>Consumption by model</span></div><div class="table-responsive"><table id="model-insights-table"><thead><tr><th>Model</th><th>Requests</th><th>Tokens</th><th>Cost</th></tr></thead><tbody></tbody></table></div></div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="tab-delivery">
+            <div class="insight-card"><div class="insight-card-header"><h3>Pull request outcomes</h3><span>Requires PR lifecycle events from your source-control integration</span></div><div class="table-responsive"><table id="pr-insights-table"><thead><tr><th>PR</th><th>Repository</th><th>Developer</th><th>Tool</th><th>Status</th><th>Reviews</th><th>Files</th><th>Tokens</th><th>Cycle time</th></tr></thead><tbody></tbody></table></div></div>
+        </div>
+
+        <div class="tab-pane" id="tab-flow">
+            <div class="insight-layout"><div class="insight-card"><div class="insight-card-header"><h3>Focus &amp; flow</h3><span>Descriptive signals, not a ranking</span></div><div id="flow-summary" class="snapshot-grid"></div></div><div class="insight-card span-2"><div class="insight-card-header"><h3>Interpretation</h3><span>What the measurements can and cannot establish</span></div><div id="flow-guidance" class="guidance-box"></div></div></div>
+        </div>
+
+        <div class="tab-pane" id="tab-governance">
+            <div class="insight-layout"><div class="insight-card"><div class="insight-card-header"><h3>Governance summary</h3><span>Prevented and privacy-processed events</span></div><div id="security-summary" class="snapshot-grid"></div></div><div class="insight-card span-2"><div class="insight-card-header"><h3>Security interpretation</h3><span>Risk detection is not the same as confirmed exposure</span></div><div id="security-guidance" class="guidance-box"></div></div></div>
+        </div>
+
+        <div class="tab-pane" id="tab-quality">
+            <div class="insight-layout"><div class="insight-card span-2"><div class="insight-card-header"><h3>Collection coverage</h3><span>Can leadership trust the visible numbers?</span></div><div id="quality-bars" class="bar-list"></div></div><div class="insight-card"><div class="insight-card-header"><h3>Coverage notes</h3><span>Missing data should never look like zero activity</span></div><div id="quality-notes" class="guidance-box"></div></div></div>
+        </div>
+        
+        <!-- Activity Stream Tab (Active by default) -->
+        <div class="tab-pane" id="tab-activity">
+            <div class="table-card full-width">
+                <h2>Activity Stream</h2>
+                <!-- Search & Filtering Toolbar -->
+                <div class="search-filter-bar">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="activity-search" placeholder="Search activity stream...">
+                    </div>
+                    <span class="filter-label">Stream:</span>
+                    <select id="filter-stream-type" class="filter-select">
+                        <option value="all" selected>All Events</option>
+                        <option value="inference">Gateway Routing</option>
+                        <option value="audit">Audit Trail</option>
+                        <option value="productivity">Productivity</option>
+                        <option value="search_performed">Search</option>
+                        <option value="agent_turn">Codex Turns</option>
+                        <option value="session_outcome">Session Outcomes</option>
+                        <option value="cursor">Cursor Activity (MCP)</option>
+                    </select>
+                    <span class="filter-label filter-route-group">Route:</span>
+                    <select id="filter-route" class="filter-select filter-route-group">
+                        <option value="all">All Routes</option>
+                        <option value="local">Local Only</option>
+                        <option value="cloud">Cloud Only</option>
+                    </select>
+                    <span class="filter-label filter-client-group">Client:</span>
+                    <select id="filter-client" class="filter-select filter-client-group">
+                        <option value="all">All Clients</option>
+                    </select>
+                    <span class="filter-label">Limit:</span>
+                    <select id="filter-limit" class="filter-select">
+                        <option value="20">Last 20</option>
+                        <option value="50">Last 50</option>
+                        <option value="100">Last 100</option>
+                        <option value="all">All Logs</option>
+                    </select>
+                </div>
+                <div class="table-responsive" id="inference-stream-panel">
+                    <table id="activity-table">
+                        <thead>
+                            <tr>
+                                <th>Date &amp; Time</th>
+                                <th>User</th>
+                                <th>Team</th>
+                                <th>Client</th>
+                                <th>Route</th>
+                                <th>Model</th>
+                                <th>Reason</th>
+                                <th>Tokens</th>
+                                <th>Fallback</th>
+                                <th>Repo Hits</th>
+                                <th>Latency (ms)</th>
+                                <th>Est. Savings</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="table-responsive hidden" id="unified-stream-panel">
+                    <table id="unified-activity-table">
+                        <thead>
+                            <tr>
+                                <th>Date &amp; Time</th>
+                                <th>User</th>
+                                <th>Team</th>
+                                <th>Type</th>
+                                <th>Client</th>
+                                <th>Summary</th>
+                                <th>Tokens</th>
+                                <th>Duration</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Spenders Tab -->
+        <div class="tab-pane admin-only-tab" id="tab-spenders">
+            <div class="table-card full-width">
+                <h2>Top Spenders</h2>
+                <div class="table-responsive">
+                    <table id="users-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Team</th>
+                                <th>Requests</th>
+                                <th>Cloud Calls</th>
+                                <th>Est. Savings</th>
+                                <th>Actual Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Per-Team Breakdown Tab -->
+        <div class="tab-pane admin-only-tab" id="tab-teams">
+            <div class="table-card full-width">
+                <h2>Per-Team Breakdown</h2>
+                <div class="table-responsive">
+                    <table id="teams-table">
+                        <thead>
+                            <tr>
+                                <th>Team</th>
+                                <th>Requests</th>
+                                <th>Local</th>
+                                <th>Cloud</th>
+                                <th>Est. Savings</th>
+                                <th>Actual Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- By Client Tab -->
+        <div class="tab-pane admin-only-tab" id="tab-clients">
+            <div class="table-card full-width">
+                <h2>By Client</h2>
+                <p class="section-subtitle">Audit, productivity, and usage events broken down by the AI tool that reported them</p>
+                <div class="table-responsive">
+                    <table id="clients-table">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Events</th>
+                                <th>Lines +</th>
+                                <th>Lines −</th>
+                                <th>Tokens</th>
+                                <th>Actual Cost</th>
+                                <th>Est. Savings</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Developer Audit Trail Tab -->
+        <div class="tab-pane" id="tab-audit">
+            <div class="table-card full-width">
+                <h2>Developer Audit Trail</h2>
+                <div class="search-filter-bar compact-filter-bar">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="audit-search" placeholder="Search action, target, user, details...">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="audit-table">
+                        <thead>
+                            <tr>
+                                <th>Date &amp; Time</th>
+                                <th>User</th>
+                                <th>Team</th>
+                                <th>Action</th>
+                                <th>Target</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Productivity Sessions Tab -->
+        <div class="tab-pane" id="tab-productivity">
+            <div class="table-card full-width">
+                <h2>Productivity Sessions</h2>
+                <div class="search-filter-bar compact-filter-bar">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="productivity-search" placeholder="Search user, team, files...">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="productivity-table">
+                        <thead>
+                            <tr>
+                                <th>Date &amp; Time</th>
+                                <th>User</th>
+                                <th>Team</th>
+                                <th>Active Time</th>
+                                <th>Lines +</th>
+                                <th>Lines −</th>
+                                <th>Files</th>
+                                <th>Touched Files</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
