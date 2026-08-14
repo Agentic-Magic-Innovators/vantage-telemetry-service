@@ -122,6 +122,53 @@ def _event_duration_ms(record: dict) -> float:
     return 0.0
 
 
+def _spend_bucket() -> dict:
+    return {
+        "teamId": "unknown",
+        "requests": 0,
+        "localRequests": 0,
+        "cloudRequests": 0,
+        "savingsUsd": 0.0,
+        "actualCostUsd": 0.0,
+    }
+
+
+def _event_savings_usd(event: dict) -> float:
+    """Estimated savings for one spend/usage event."""
+    if event.get("type") == "cost":
+        return float(event.get("savingsUsd") or 0)
+    if "route" in event or event.get("type") in (None, "inference"):
+        actual = float(event.get("actualCostUsd") or 0)
+        return max(0.0, float(event.get("estimatedAllCloudCostUsd") or 0) - actual)
+    return float(event.get("savingsUsd") or 0)
+
+
+def _accumulate_user_team_spend(event: dict, team_map: dict, user_map: dict) -> None:
+    """Roll one AI usage/cost event into byTeam and byUser aggregates."""
+    team_id = event.get("teamId") or "unknown"
+    user_id = event.get("userId") or "unknown"
+    team = team_map[team_id]
+    user = user_map[user_id]
+
+    team["requests"] += 1
+    user["teamId"] = team_id
+    user["requests"] += 1
+
+    route = event.get("route")
+    if route == "local":
+        team["localRequests"] += 1
+    elif route == "cloud":
+        team["cloudRequests"] += 1
+        user["cloudRequests"] += 1
+
+    actual = float(event.get("actualCostUsd") or 0)
+    savings = _event_savings_usd(event)
+    team["actualCostUsd"] += actual
+    team["savingsUsd"] += savings
+    user["actualCostUsd"] += actual
+    user["savingsUsd"] += savings
+
+
 # ---------------------------------------------------------------------------
 # Write path
 # ---------------------------------------------------------------------------
@@ -319,43 +366,38 @@ def _compute_summary(items: list) -> dict:
     # the log_* MCP tools' handshake-derived client name.
     client_sourced_items = [x for x in items if x.get("type") in client_types]
 
-    total = len(inference_items)
+    # AI activity + spend events for Top Spenders / per-team rollups.
+    # Previously only gateway inference events were counted, which excluded
+    # MCP usage, cost, and cursor_usage telemetry (the majority of data).
+    spend_items = (
+        inference_items
+        + usage_items
+        + cost_items
+        + cursor_usage_items
+        + agent_turn_items
+    )
+
+    total = len(spend_items)
     local = sum(1 for x in inference_items if x.get("route") == "local")
     cloud = sum(1 for x in inference_items if x.get("route") == "cloud")
     blocked = sum(1 for x in inference_items if x.get("policyBlockedCloud"))
     cache_hits = sum(1 for x in inference_items if x.get("reason") == "cache_hit")
     all_cloud_cost = sum(x.get("estimatedAllCloudCostUsd", 0) for x in inference_items)
-    actual_cost = sum(x.get("actualCostUsd", 0) for x in inference_items)
-    savings = max(0.0, all_cloud_cost - actual_cost)
+    inference_actual = sum(float(x.get("actualCostUsd") or 0) for x in inference_items)
+    client_actual = sum(float(x.get("actualCostUsd") or 0) for x in cost_items)
+    client_savings = sum(float(x.get("savingsUsd") or 0) for x in cost_items)
+    actual_cost = inference_actual + client_actual
+    savings = max(0.0, all_cloud_cost - inference_actual) + client_savings
     savings_rate = round((savings / all_cloud_cost) * 100, 2) if all_cloud_cost > 0 else 0
-    cache_rate = round(100 * cache_hits / total, 1) if total > 0 else 0.0
+    cache_rate = round(100 * cache_hits / len(inference_items), 1) if inference_items else 0.0
 
-    _team: dict = defaultdict(
-        lambda: {"requests": 0, "localRequests": 0, "cloudRequests": 0, "savingsUsd": 0.0, "actualCostUsd": 0.0}
-    )
-    _user: dict = defaultdict(
-        lambda: {"teamId": "unknown", "requests": 0, "cloudRequests": 0, "savingsUsd": 0.0, "actualCostUsd": 0.0}
-    )
-    for x in inference_items:
-        t = x.get("teamId") or "unknown"
-        u = x.get("userId") or "unknown"
-        s_val = max(0.0, x.get("estimatedAllCloudCostUsd", 0) - x.get("actualCostUsd", 0))
-        _team[t]["requests"] += 1
-        if x.get("route") == "local":
-            _team[t]["localRequests"] += 1
-        elif x.get("route") == "cloud":
-            _team[t]["cloudRequests"] += 1
-        _team[t]["savingsUsd"] += s_val
-        _team[t]["actualCostUsd"] += x.get("actualCostUsd", 0)
-        _user[u]["teamId"] = t
-        _user[u]["requests"] += 1
-        if x.get("route") == "cloud":
-            _user[u]["cloudRequests"] += 1
-        _user[u]["savingsUsd"] += s_val
-        _user[u]["actualCostUsd"] += x.get("actualCostUsd", 0)
+    _team: dict = defaultdict(_spend_bucket)
+    _user: dict = defaultdict(_spend_bucket)
+    for x in spend_items:
+        _accumulate_user_team_spend(x, _team, _user)
 
-    by_team = sorted(_team.items(), key=lambda kv: kv[1]["requests"], reverse=True)
-    by_user = sorted(_user.items(), key=lambda kv: kv[1]["requests"], reverse=True)[:20]
+    by_team = sorted(_team.items(), key=lambda kv: (kv[1]["actualCostUsd"], kv[1]["requests"]), reverse=True)
+    by_user = sorted(_user.items(), key=lambda kv: (kv[1]["actualCostUsd"], kv[1]["requests"]), reverse=True)[:20]
 
     _client: dict = defaultdict(
         lambda: {
