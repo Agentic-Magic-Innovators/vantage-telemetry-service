@@ -57,6 +57,18 @@ CREATE TABLE IF NOT EXISTS admins (
     created_at    TIMESTAMPTZ NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS users (
+    id            TEXT        PRIMARY KEY,
+    email         TEXT        NOT NULL UNIQUE,
+    name          TEXT,
+    status        TEXT        NOT NULL DEFAULT 'pending',
+    requested_at  TIMESTAMPTZ NOT NULL,
+    approved_at   TIMESTAMPTZ,
+    approved_by   TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_users_status ON users (status);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
+
 CREATE TABLE IF NOT EXISTS ui_sessions (
     id           TEXT        PRIMARY KEY,
     token_hash   TEXT        NOT NULL UNIQUE,
