@@ -30,6 +30,7 @@
         <button class="dashboard-tab-btn admin-only-tab" data-target="tab-spenders">Top Spenders</button>
         <button class="dashboard-tab-btn admin-only-tab" data-target="tab-teams">Per-Team Breakdown</button>
         <button class="dashboard-tab-btn admin-only-tab" data-target="tab-clients">By Client</button>
+        <button class="dashboard-tab-btn admin-only-tab" data-target="tab-access-requests">Access Requests</button>
         <button class="dashboard-tab-btn" data-target="tab-audit">Developer Audit Trail</button>
         <button class="dashboard-tab-btn" data-target="tab-productivity">Productivity Sessions</button>
     </div>
@@ -213,6 +214,28 @@
                         </thead>
                         <tbody></tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Access Requests Tab -->
+        <div class="tab-pane admin-only-tab" id="tab-access-requests">
+            <div class="table-card full-width">
+                <h2>Access Requests</h2>
+                <p class="section-subtitle">New dashboard sign-ups awaiting approval — approving grants the restricted "user" role (personal activity/usage only)</p>
+                <div class="table-responsive">
+                    <table id="access-requests-table">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Requested</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <p id="access-requests-empty" class="hidden" style="padding: 1rem; color: var(--text-muted);">No pending requests.</p>
                 </div>
             </div>
         </div>

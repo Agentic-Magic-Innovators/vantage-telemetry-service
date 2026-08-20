@@ -12,11 +12,17 @@ TELEMETRY_SESSION_COOKIE = "vantage_telemetry_session"
 from .auth import (
     TELEMETRY_SESSION_COOKIE as _TELEMETRY_COOKIE,
     admin_exists,
+    approve_user,
     create_admin,
     create_token,
     create_ui_session,
     delete_ui_session,
+    get_user,
+    is_email_authorized,
     list_user_tokens,
+    list_users,
+    register_user,
+    reject_user,
     rotate_token,
     verify_admin_password,
     verify_ui_session,
@@ -114,6 +120,11 @@ class UserEmailLoginBody(BaseModel):
     email: str
 
 
+class RegisterBody(BaseModel):
+    email: str
+    name: str = ""
+
+
 @router.get("/config")
 async def auth_config():
     google_client_id = _ui_cfg().get("googleClientId", "")
@@ -170,8 +181,8 @@ async def google_login(body: GoogleLoginBody, response: Response):
         raise HTTPException(401, "Google token has no email claim")
 
     allowed: list[str] = _ui_cfg().get("allowedEmails", [])
-    if allowed and email not in allowed:
-        raise HTTPException(403, "Your Google account is not authorised for this dashboard")
+    if not await is_email_authorized(email, allowed):
+        raise HTTPException(403, "not_registered")
 
     token = await create_ui_session("user", email, _SESSION_TTL_HOURS, service="telemetry")
     _set_session_cookie(response, token)
@@ -186,11 +197,32 @@ async def user_email_login(body: UserEmailLoginBody, response: Response):
     if not email or "@" not in email:
         raise HTTPException(400, "A valid email address is required")
     allowed: list[str] = _ui_cfg().get("allowedEmails", [])
-    if allowed and email not in [e.lower() for e in allowed]:
-        raise HTTPException(403, "Your email is not authorised for this dashboard")
+    if not await is_email_authorized(email, allowed):
+        raise HTTPException(403, "not_registered")
     token = await create_ui_session("user", email, _SESSION_TTL_HOURS, service="telemetry")
     _set_session_cookie(response, token)
     return {"role": "user", "userId": email}
+
+
+@router.post("/register")
+async def register(body: RegisterBody):
+    """Public, unauthenticated: request a dashboard account. Never grants
+    access by itself -- creates a 'pending' row an admin must approve
+    (see /admin/pending-users) before the email can actually log in."""
+    try:
+        result = await register_user(body.email, body.name)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    return result
+
+
+@router.get("/register/status")
+async def register_status(email: str):
+    """Public: lets the login page tell someone whether their request is
+    still pending, approved, or was never submitted -- without requiring
+    them to already be logged in."""
+    user = await get_user(email)
+    return {"status": user["status"] if user else "not_found"}
 
 
 async def _require_session(request: Request) -> dict:
@@ -198,6 +230,43 @@ async def _require_session(request: Request) -> dict:
     if ctx is None:
         raise HTTPException(401, "Not authenticated")
     return ctx
+
+
+async def _require_admin(request: Request) -> dict:
+    ctx = await _require_session(request)
+    if ctx.get("role") != "admin":
+        raise HTTPException(403, "Admin access required")
+    return ctx
+
+
+@router.get("/admin/pending-users")
+async def admin_pending_users(request: Request):
+    await _require_admin(request)
+    return {"users": await list_users(status="pending")}
+
+
+@router.get("/admin/users")
+async def admin_all_users(request: Request):
+    await _require_admin(request)
+    return {"users": await list_users()}
+
+
+@router.post("/admin/users/{email}/approve")
+async def admin_approve_user(email: str, request: Request):
+    ctx = await _require_admin(request)
+    ok = await approve_user(email, ctx["userId"])
+    if not ok:
+        raise HTTPException(404, "User not found")
+    return {"ok": True, "email": email.strip().lower(), "status": "approved"}
+
+
+@router.post("/admin/users/{email}/reject")
+async def admin_reject_user(email: str, request: Request):
+    await _require_admin(request)
+    ok = await reject_user(email)
+    if not ok:
+        raise HTTPException(404, "User not found")
+    return {"ok": True, "email": email.strip().lower(), "status": "rejected"}
 
 
 @router.get("/my-tokens")

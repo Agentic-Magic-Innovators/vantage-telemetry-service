@@ -64,6 +64,28 @@
                 <div class="preview-item preview-restricted">🔒 Team-wide analytics (Admin only)</div>
                 <div class="preview-item preview-restricted">🔒 Policies &amp; configuration (Admin only)</div>
             </div>
+
+            <!-- New-user registration: request-access flow, admin-approval gated -->
+            <div id="register-section">
+                <p class="login-hint">
+                    New here? <button type="button" id="show-register-btn" class="login-link-btn">Request access</button>
+                </p>
+
+                <form id="register-form" class="hidden" autocomplete="off">
+                    <div class="login-form-group">
+                        <label for="register-email">Email address</label>
+                        <input type="email" id="register-email" placeholder="you@example.com" autocomplete="email" required>
+                    </div>
+                    <div class="login-form-group">
+                        <label for="register-name">Name <span class="login-hint-inline">(optional)</span></label>
+                        <input type="text" id="register-name" placeholder="Jane Doe" autocomplete="name">
+                    </div>
+                    <div id="register-error" class="login-error hidden"></div>
+                    <div id="register-success" class="login-success hidden"></div>
+                    <button type="submit" class="login-submit-btn">Request access</button>
+                    <p class="login-hint">An admin reviews every request before it's approved — you'll be able to sign in once it is.</p>
+                </form>
+            </div>
         </div>
     </div>
 </div>

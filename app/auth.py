@@ -347,6 +347,132 @@ async def verify_admin_password(username: str, password: str) -> bool:
 
 
 # ---------------------------------------------------------------------------
+# Self-service user registration (admin-approval gated)
+# ---------------------------------------------------------------------------
+# A "user" account here only grants the restricted dashboard "user" role
+# (personal activity/usage, never team-wide analytics or config -- see
+# require_scope/_ui_session_context). Registration never creates an admin.
+
+_USER_STATUSES = {"pending", "approved", "rejected"}
+
+
+def _row_to_user(row) -> dict:
+    return {
+        "id": row["id"],
+        "email": row["email"],
+        "name": row["name"] or "",
+        "status": row["status"],
+        "requestedAt": _ts_str(row["requested_at"]),
+        "approvedAt": _ts_str(row["approved_at"]) if row["approved_at"] else None,
+        "approvedBy": row["approved_by"] or "",
+    }
+
+
+async def get_user(email: str) -> dict | None:
+    email = email.strip().lower()
+    pool = db.get_pool()
+    if not pool or not email:
+        return None
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow("SELECT * FROM users WHERE email = $1", email)
+    return _row_to_user(row) if row else None
+
+
+async def register_user(email: str, name: str = "") -> dict:
+    """Create (or re-submit) a pending registration.
+
+    Idempotent by design: registering an already-pending email just returns
+    its current pending state; registering an already-approved email tells
+    the caller they can log in; re-registering a previously-rejected email
+    resets it back to pending so a person isn't permanently locked out by
+    one rejection (e.g. a typo'd email the first time).
+    """
+    email = email.strip().lower()
+    if not email or "@" not in email:
+        raise ValueError("A valid email address is required")
+    pool = db.get_pool()
+    if not pool:
+        raise HTTPException(status_code=503, detail="Database not available")
+
+    now = _utc_now()
+    existing = await get_user(email)
+    if existing and existing["status"] == "approved":
+        return {"status": "approved", "alreadyExists": True}
+    if existing and existing["status"] == "pending":
+        return {"status": "pending", "alreadyExists": True}
+
+    user_id = existing["id"] if existing else f"usr_{uuid.uuid4().hex[:20]}"
+    async with pool.acquire() as conn:
+        await conn.execute(
+            """
+            INSERT INTO users (id, email, name, status, requested_at, approved_at, approved_by)
+            VALUES ($1, $2, $3, 'pending', $4, NULL, NULL)
+            ON CONFLICT (email) DO UPDATE
+                SET status = 'pending', name = COALESCE(NULLIF($3, ''), users.name),
+                    requested_at = $4, approved_at = NULL, approved_by = NULL
+            """,
+            user_id,
+            email,
+            name.strip(),
+            now,
+        )
+    return {"status": "pending", "alreadyExists": False}
+
+
+async def list_users(status: str | None = None) -> list[dict]:
+    pool = db.get_pool()
+    if not pool:
+        return []
+    async with pool.acquire() as conn:
+        if status:
+            rows = await conn.fetch(
+                "SELECT * FROM users WHERE status = $1 ORDER BY requested_at DESC", status
+            )
+        else:
+            rows = await conn.fetch("SELECT * FROM users ORDER BY requested_at DESC")
+    return [_row_to_user(r) for r in rows]
+
+
+async def approve_user(email: str, approved_by: str) -> bool:
+    email = email.strip().lower()
+    pool = db.get_pool()
+    if not pool:
+        return False
+    async with pool.acquire() as conn:
+        result = await conn.execute(
+            "UPDATE users SET status = 'approved', approved_at = $1, approved_by = $2 WHERE email = $3",
+            _utc_now(),
+            approved_by,
+            email,
+        )
+    return result.endswith("1")
+
+
+async def reject_user(email: str) -> bool:
+    email = email.strip().lower()
+    pool = db.get_pool()
+    if not pool:
+        return False
+    async with pool.acquire() as conn:
+        result = await conn.execute(
+            "UPDATE users SET status = 'rejected', approved_at = NULL, approved_by = NULL WHERE email = $1",
+            email,
+        )
+    return result.endswith("1")
+
+
+async def is_email_authorized(email: str, allowed_emails: list[str]) -> bool:
+    """True if `email` may use the restricted "user" dashboard role, via
+    either the config-file bootstrap allowlist or an approved registration.
+    """
+    email_norm = email.strip().lower()
+    if allowed_emails and email_norm in {e.strip().lower() for e in allowed_emails}:
+        return True
+    user = await get_user(email_norm)
+    return bool(user and user["status"] == "approved")
+
+
+# ---------------------------------------------------------------------------
 # UI session tokens (dashboard login)
 # ---------------------------------------------------------------------------
 
